@@ -16,7 +16,9 @@
      
         <activity
             android:name=".activity.LoginActivity"
-            android:label="@string/app_name" >
+            android:label="Login" 
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -24,18 +26,21 @@
         </activity>
         
         <activity
-            android:name=".activity.ConfirmationCodeActivity"
-            android:label="@string/app_name" >
+            android:name=".activity.ConfirmationCodeActivity"            
+            android:label="Confirmation code" 
+            android:configChanges="orientation|keyboardHidden|screenSize" >
         </activity>
         
         <activity    
             android:name=".activity.MainActivity"
-            android:label="@string/app_name" >
+            android:label="Main" 
+            android:configChanges="orientation|keyboardHidden|screenSize" >
         </activity>
         
         <activity
             android:name=".activity.SendActivity"
-            android:label="@string/app_name" >
+            android:label="Send" 
+            android:configChanges="orientation|keyboardHidden|screenSize" >
         </activity>
         
     </application>

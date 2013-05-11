@@ -6,17 +6,22 @@
 
     <FrameLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
         android:layout_weight="1" >
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/image_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
             android:visibility="gone" />
 
         <VideoView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/video_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
             android:visibility="gone" />
     </FrameLayout>
 
@@ -33,18 +38,21 @@
         android:orientation="horizontal" >
 
         <Button
+            android:id="@+id/take_photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Фото" />
 
         <Button
+            android:id="@+id/send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="С" />
 
         <Button
+            android:id="@+id/take_video"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
