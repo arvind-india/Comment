@@ -6,9 +6,8 @@
 
     <FrameLayout
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_margin="10dp"
-        android:layout_weight="1" >
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
 
         <ImageView
             android:id="@+id/image_view"
@@ -29,34 +28,76 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:editable="false"
         android:gravity="top"
         android:lines="3" />
-
+    <ListView 
+        android:id="@android:id/list"
+                android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        />
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"/>
+    
+/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/take_photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Фото" />
+            android:text="К списку" />
 
         <Button
-            android:id="@+id/send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="С" />
+            android:text="Скачать" />
 
         <Button
-            android:id="@+id/take_video"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Видео" />
+            android:text="C" />
+
+          <RadioGroup
+        android:id="@+id/top_panel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+                    android:gravity="center"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/button_plus"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:checked="true"
+            android:padding="10dp"
+            android:gravity="center"
+            android:button="@null"
+            android:text="+" />
+
+        <RadioButton
+            android:id="@+id/button_minus"
+
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:gravity="center"
+                        android:button="@null"
+            android:text="-" />
+
+
+    </RadioGroup>
+        
     </LinearLayout>
 
 </LinearLayout>

@@ -5,6 +5,7 @@ import ru.commenthere.comment.R;
 import ru.commenthere.comment.R.id;
 import ru.commenthere.comment.R.layout;
 import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,7 +13,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class MainActivity extends Activity implements OnClickListener{
+public class MainActivity extends ListActivity implements OnClickListener{
 	
 	private Button exitButton;
 	private Button aButton;

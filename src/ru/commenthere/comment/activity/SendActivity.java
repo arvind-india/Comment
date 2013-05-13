@@ -89,7 +89,7 @@ public class SendActivity extends Activity implements OnClickListener {
 	            // Video captured and saved to fileUri specified in the Intent
 	            Toast.makeText(this, "Video saved to:\n" +
 	                     data.getData(), Toast.LENGTH_LONG).show();
-	            fileUri = data.getData();
+	            fileUri  = data.getData();
 	            imageView.setVisibility(View.GONE);
 	            videoView.setVisibility(View.VISIBLE);
 	            videoView.setVideoURI(fileUri);
