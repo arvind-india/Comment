@@ -1,6 +1,7 @@
 package ru.commenthere.comment.activity;
 
 
+import ru.commenthere.comment.AppContext;
 import ru.commenthere.comment.R;
 import ru.commenthere.comment.R.id;
 import ru.commenthere.comment.R.layout;
@@ -17,11 +18,18 @@ public class ConfirmationCodeActivity extends Activity implements OnClickListene
 	private EditText codeEditText;
 	private Button sendButton;
 	
+	private String email;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_confirmation_code);
+		parseParams();
 		initViews();
+	}
+	
+	private void parseParams(){
+		email = getIntent().getStringExtra(AppContext.EMAIL_KEY);
 	}
 	
 	private void initViews(){

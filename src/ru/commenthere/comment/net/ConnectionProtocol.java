@@ -71,7 +71,7 @@ public class ConnectionProtocol {
 		}
 	}
 	
-	private User verifyCode(String email, String code) throws ConnectionClientException{
+	public User verifyCode(String email, String code) throws ConnectionClientException{
 		User user = null;
 		
 		Uri.Builder ub = Uri.parse(AppContext.API_URL).buildUpon();

@@ -20,6 +20,10 @@ public class AppContext {
 	
 	
 	public static final boolean USE_GZIP = false; 
+	
+	public static final String EMAIL_KEY = "email_key";
+	public static final String USER_ID_KEY = "user_id_key";
+	public static final String TOKEN_KEY = "token_key";
 		
 	
 	private Context context;

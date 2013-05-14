@@ -1,6 +1,7 @@
 package ru.commenthere.comment.activity;
 
 
+import ru.commenthere.comment.AppContext;
 import ru.commenthere.comment.R;
 import ru.commenthere.comment.R.id;
 import ru.commenthere.comment.R.layout;
@@ -26,6 +27,8 @@ public class LoginActivity extends Activity implements OnClickListener, CustomAs
 	
 	private SendCodeTask sendCodeTask = null;
 	
+	private String email;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +45,7 @@ public class LoginActivity extends Activity implements OnClickListener, CustomAs
 	}
 	
 	private boolean validate(){
-		String email = emailEditText.getText().toString().trim();
+		email = emailEditText.getText().toString().trim();
 		if (TextUtils.isEmpty(email)){
 			AppUtils.showAlert(this, "Заполните поле email");
 			return false;
@@ -65,13 +68,15 @@ public class LoginActivity extends Activity implements OnClickListener, CustomAs
 	public void onClick(View v) {
 		if (v.getId() == R.id.send){
 			if (validate()){
-				processSendCode(emailEditText.getText().toString().trim());
+				processSendCode(email);
 			}
 		}		
 	}
 	
 	private void showConfimationCodeActivity(){
-		startActivity(new Intent(this, ConfirmationCodeActivity.class));
+		Intent intent = new Intent(this, ConfirmationCodeActivity.class); 
+		intent.putExtra(AppContext.EMAIL_KEY, email);
+		startActivity(intent);
 		//finish();
 	}
 	
