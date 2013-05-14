@@ -42,7 +42,8 @@ public class LoginActivity extends Activity implements OnClickListener, CustomAs
 	}
 	
 	private boolean validate(){
-		if (TextUtils.isEmpty(emailEditText.toString().trim())){
+		String email = emailEditText.getText().toString().trim();
+		if (TextUtils.isEmpty(email)){
 			AppUtils.showAlert(this, "Заполните поле email");
 			return false;
 		}
@@ -64,7 +65,7 @@ public class LoginActivity extends Activity implements OnClickListener, CustomAs
 	public void onClick(View v) {
 		if (v.getId() == R.id.send){
 			if (validate()){
-				processSendCode(emailEditText.toString());
+				processSendCode(emailEditText.getText().toString().trim());
 			}
 		}		
 	}

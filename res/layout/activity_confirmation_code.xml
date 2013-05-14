@@ -2,24 +2,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-	android:gravity="center"
-	android:orientation="vertical">
+    android:gravity="center"
+    android:orientation="vertical" >
 
-        <EditText
-            android:id="@+id/code"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        	        android:layout_margin="10dp"
-	        	        	        android:singleLine="true"
-	        	        
-	        android:hint="Введите код" />
-        
-        <Button
-            android:id="@+id/send"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        	        android:layout_margin="10dp"
-	        android:text = "Отправить" />
-        
+    <EditText
+        android:id="@+id/code"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:hint="Введите код"
+        android:singleLine="true" />
+
+    <Button
+        android:id="@+id/send"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:inputType="number"
+        android:text="Отправить" />
 
 </LinearLayout>
