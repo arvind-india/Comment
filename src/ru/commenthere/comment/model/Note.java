@@ -13,7 +13,6 @@ public class Note {
 	private int dislikes;
 	private int isCanSendComment;
 	
-	
 	public String getFileNamePreview() {
 		return fileNamePreview;
 	}
@@ -74,5 +73,14 @@ public class Note {
 	}
 	public void setIsCanSendComment(int isCanSendComment) {
 		this.isCanSendComment = isCanSendComment;
+	}
+	
+	@Override
+	public String toString() {
+		return "Note [fileName=" + fileName + ", description=" + description
+				+ ", fileNamePreview=" + fileNamePreview + ", id=" + id
+				+ ", userId=" + userId + ", type=" + type + ", fileType="
+				+ fileType + ", likes=" + likes + ", dislikes=" + dislikes
+				+ ", isCanSendComment=" + isCanSendComment + "]";
 	}
 }

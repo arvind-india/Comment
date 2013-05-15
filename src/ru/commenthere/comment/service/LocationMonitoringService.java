@@ -1,7 +1,14 @@
 package ru.commenthere.comment.service;
 
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import ru.commenthere.comment.Application;
+import ru.commenthere.comment.model.Note;
 import ru.commenthere.comment.net.ConnectionClientException;
 import ru.commenthere.comment.net.ConnectionProtocol;
+import ru.commenthere.comment.utils.AppUtils;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,19 +19,29 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 public class LocationMonitoringService extends Service {
 
+	public static final String TAG = "LocationMonitoringService";
+	
 	public static final String ACTION_CHANGE_REFRESH_INTERVAL = "ru.commenthere.comment.service." +
 			"LocationMonitoringService.ACTION_CHANGE_REFRESH_INTERVAL";
 	public static final String ACTION_CHANGE_ACCURACY = "ru.commenthere.comment.service." +
 	"LocationMonitoringService.ACTION_CHANGE_ACCYRACY";
+	public static final String ACTION_STOP_SERVICE = "ru.commenthere.comment.service." +
+	"LocationMonitoringService.ACTION_STOP_SERVICE";
 	
 	public static final String CHANGE_REFRESH_INTERVAL_BUNDLE = "refresh_interval_data";
 	public static final String CHANGE_ACCURACY_BUNDLE = "accuracy_data";
+	public static final String ACCURACY = "accuracy";
+	public static final String REFRESH_INTERVAL = "refresh_interval";
 	
-	private static long refreshInterval = 10000l;
+	private static long locationSendingInterval = 10000l;
+	private static long locationRefreshInterval = 5000l;
 	private static float accuracy = 100f;
+	private static boolean isDebug;
 	
 	private static Location lastLocation;
 	
@@ -32,31 +49,63 @@ public class LocationMonitoringService extends Service {
 	private NetworkLocationListener locationListener;
 	private CommandsBroadcastReceiver commandsReceiver;
 	private static ConnectionProtocol connectionProtocol;
+	private static LocationSender sendingTimer;
+	private static Timer counterTimer;
+	private static Context appContext;
 	
 	private int launchCounter;
 	
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		
+		isDebug = true;
+		if(isDebug) {
+			Log.d(TAG, "Service: creating service.");
+		}
+		
+		appContext = Application.getInstance().getContext();
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		locationListener = new NetworkLocationListener();
 		commandsReceiver = new CommandsBroadcastReceiver();
 		connectionProtocol = new ConnectionProtocol(null);
 		
-		registerReceiver(commandsReceiver, getCommandsFilter());
-		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, refreshInterval,
-				accuracy, locationListener);
+		LocalBroadcastManager.getInstance(appContext).registerReceiver(commandsReceiver,
+				getCommandsFilter());
+		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+				locationRefreshInterval, accuracy, locationListener);
+		startLocationSending();
 	}
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		if(isDebug) {
+			Log.d(TAG, "Service: starting service.");
+		}
+		
 		launchCounter = startId;
 		return super.onStartCommand(intent, flags, startId);
 	}
 	
 	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if(isDebug) {
+			Log.d(TAG, "Service: destroing service.");
+		}
+		
+		stopLocationSending();
+		LocalBroadcastManager.getInstance(appContext).unregisterReceiver(commandsReceiver);
+		
+		locationManager = null;
+		locationListener = null;
+		commandsReceiver = null;
+		connectionProtocol = null;
+	}
+	
+	@Override
 	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
+		// TODO implement logic for binding
 		return null;
 	}
 	
@@ -68,8 +117,23 @@ public class LocationMonitoringService extends Service {
 	
 	private IntentFilter getCommandsFilter() {
 		IntentFilter filter = new IntentFilter();
-		
+		filter.addAction(ACTION_STOP_SERVICE);
+		filter.addAction(ACTION_CHANGE_ACCURACY);
+		filter.addAction(ACTION_CHANGE_REFRESH_INTERVAL);
 		return filter;
+	}
+	
+	private void startLocationSending() {
+		sendingTimer = new LocationSender();
+		counterTimer = new Timer();
+		counterTimer.schedule(sendingTimer, locationSendingInterval, locationSendingInterval);
+	}
+	
+	private void stopLocationSending() {
+		counterTimer.cancel();
+		sendingTimer.cancel();
+		counterTimer = null;
+		sendingTimer = null;
 	}
 
 	private static class NetworkLocationListener implements LocationListener {
@@ -77,36 +141,30 @@ public class LocationMonitoringService extends Service {
 		@Override
 		public void onLocationChanged(Location location) {
 			lastLocation = location;
-			//TODO get user token!
-			try {
-				connectionProtocol.getNotes(lastLocation.getLatitude(),
-						lastLocation.getLongitude(), "");
-			} catch (ConnectionClientException e) {
-				// TODO add some error handling logic
+			if(isDebug) {
+				Log.d(TAG, "Service: received new location ("+lastLocation.getLatitude()+
+						", "+lastLocation.getLongitude()+")");
 			}
 		}
 
 		@Override
 		public void onStatusChanged(String provider, int status, Bundle extras) {
-			// TODO Auto-generated method stub
-			
+			//do nothing here for now
 		}
 
 		@Override
 		public void onProviderEnabled(String provider) {
-			// TODO Auto-generated method stub
-			
+			//do nothing here for now
 		}
 
 		@Override
 		public void onProviderDisabled(String provider) {
-			// TODO Auto-generated method stub
-			
+			//do nothing here for now
 		}
 		
 	}
 	
-	private static class CommandsBroadcastReceiver extends BroadcastReceiver {
+	private class CommandsBroadcastReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -115,18 +173,53 @@ public class LocationMonitoringService extends Service {
 			if(ACTION_CHANGE_ACCURACY.equals(action)) {
 				data = intent.getBundleExtra(CHANGE_ACCURACY_BUNDLE);
 				if(data != null) {
-					
+					float acc = data.getFloat(ACCURACY);
+					accuracy = acc != 0 ? acc : accuracy;
 				}
 			} else if (ACTION_CHANGE_REFRESH_INTERVAL.equals(action)) {
 				data = intent.getBundleExtra(CHANGE_ACCURACY_BUNDLE);
 				if(data != null) {
-					
+					long interval = data.getLong(REFRESH_INTERVAL);
+					locationSendingInterval = interval > 0 ? interval : locationSendingInterval;
 				}
+			} else if(ACTION_STOP_SERVICE.equals(action)) {
+				killService();
 			} else {
 				//TODO add another commands handling
 			}
 			
 		}
 		
+	}
+	
+	private static class LocationSender extends TimerTask {
+		@Override
+		public void run() {
+			List<Note> notes = null;
+			if(isDebug) {
+				Log.d(TAG, "Service: sending location to the server");
+			}
+			try {
+				String token = Application.getInstance().getAppContext().getUserToken();
+				if(AppUtils.isOnline(appContext) && lastLocation != null
+						&& token != null) {
+					notes = connectionProtocol.getNotes(lastLocation.getLatitude(),
+							lastLocation.getLongitude(), token);
+					if(notes != null) {
+						//temporary. need logic for handling received notes
+						Log.d(TAG, "Received "+ notes.size() + " notes.");
+						for(Note n : notes) {
+							Log.d(TAG, n.toString());
+						}
+					}
+				}
+			} catch (ConnectionClientException e) {
+				// TODO add some error handling logic(may be send broadcast 
+				//with error info or do nothing at all)
+				if(isDebug) {
+					Log.e(TAG, "Service: error during sending location!");
+				}
+			}
+		}
 	}
 }

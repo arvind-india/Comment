@@ -4,10 +4,12 @@ package ru.commenthere.comment.activity;
 import ru.commenthere.comment.R;
 import ru.commenthere.comment.R.id;
 import ru.commenthere.comment.R.layout;
+import ru.commenthere.comment.service.LocationMonitoringService;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -24,6 +26,14 @@ public class MainActivity extends ListActivity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		initViews();
+		startLocationService();
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Intent serviceStop = new Intent(LocationMonitoringService.ACTION_STOP_SERVICE);
+		LocalBroadcastManager.getInstance(this).sendBroadcast(serviceStop);
 	}
 	
 	private void initViews(){
@@ -33,6 +43,11 @@ public class MainActivity extends ListActivity implements OnClickListener{
 		exitButton.setOnClickListener(this);
 		aButton.setOnClickListener(this);
 		bButton.setOnClickListener(this);
+	}
+	
+	private boolean startLocationService() {
+		Intent serviceIntent = new Intent(MainActivity.this, LocationMonitoringService.class);
+		return startService(serviceIntent) != null;
 	}
 
 	@Override

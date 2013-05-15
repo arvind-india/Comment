@@ -124,6 +124,7 @@ public class ConnectionProtocol {
 	public List<Note> getNotes(double latitude, double longitude, String userToken) throws ConnectionClientException {
 		List<Note> notes = null;
 		Uri.Builder ub = Uri.parse(AppContext.API_URL).buildUpon();
+		ub.appendQueryParameter(ACTION_PARAM_NAME, GET_NOTES_ACTION);
 		ub.appendQueryParameter(LATITUDE_PARAM_NAME, String.valueOf(latitude));
 		ub.appendQueryParameter(LONGITUDE_PARAM_NAME, String.valueOf(longitude));
 		ub.appendQueryParameter(TOKEN_PARAM_NAME, userToken);
@@ -136,25 +137,30 @@ public class ConnectionProtocol {
 			int errCode = result.optInt(ERROR_PARAM_NAME);
 			if(errCode == OK_CODE) {
 				JSONArray respNotes = result.optJSONArray(GET_NOTES_ACTION);
-				notes = new ArrayList<Note>(respNotes.length());
-				for(int i = 0; i < respNotes.length(); i++) {
-					JSONObject note = respNotes.optJSONObject(i);
-					if(note != null) {
-						Note myNote = new Note();
-						myNote.setId(note.optInt(ID_PARAM_NAME));
-						myNote.setUserId(note.optInt(USER_ID_PARAM_NAME));
-						myNote.setDescription(note.optString(DESCRIPTION_PARAM_NAME));
-						myNote.setType(note.optInt(TYPE_PARAM_NAME));
-						myNote.setFileType(note.optInt(FILE_TYPE_PARAM_NAME));
-						myNote.setFileName(note.optString(FILE_NAME_PARAM_NAME));
-						myNote.setLikes(note.optInt(LIKES_PARAM_NAME));
-						myNote.setDislikes(note.optInt(DISLIKES_PARAM_NAME));
-						myNote.setIsCanSendComment(note.optInt(CAN_SEND_COMMNET_PARAM_NAME));
-						myNote.setFileNamePreview(note.optString(FILE_NAME_PREVIEW_PARAM_NAME));
-						
-						notes.add(myNote);
+				if(respNotes != null) {
+					notes = new ArrayList<Note>(respNotes.length());
+					for(int i = 0; i < respNotes.length(); i++) {
+						JSONObject note = respNotes.optJSONObject(i);
+						if(note != null) {
+							Note myNote = new Note();
+							myNote.setId(note.optInt(ID_PARAM_NAME));
+							myNote.setUserId(note.optInt(USER_ID_PARAM_NAME));
+							myNote.setDescription(note.optString(DESCRIPTION_PARAM_NAME));
+							myNote.setType(note.optInt(TYPE_PARAM_NAME));
+							myNote.setFileType(note.optInt(FILE_TYPE_PARAM_NAME));
+							myNote.setFileName(note.optString(FILE_NAME_PARAM_NAME));
+							myNote.setLikes(note.optInt(LIKES_PARAM_NAME));
+							myNote.setDislikes(note.optInt(DISLIKES_PARAM_NAME));
+							myNote.setIsCanSendComment(note.optInt(CAN_SEND_COMMNET_PARAM_NAME));
+							myNote.setFileNamePreview(note.optString(FILE_NAME_PREVIEW_PARAM_NAME));
+							
+							notes.add(myNote);
+						}
 					}
+				} else {
+					throw new ConnectionClientException("Error: no items in returned list!!!");
 				}
+
 			} else {
 				throw new ConnectionClientException(ErrorMessages.errors[errCode]);
 			}
