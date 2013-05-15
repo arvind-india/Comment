@@ -79,7 +79,7 @@ public class ConnectionProtocol {
 					return false;
 				}
 			} else{
-				throw new ConnectionClientException("Server error code: "+ errorCode);
+				throw new ConnectionClientException(ErrorMessages.errors[errorCode]);
 			}
 			
 		} catch (JSONException e) {
@@ -111,7 +111,7 @@ public class ConnectionProtocol {
 				user.setId(userId);
 				user.setToken(token);
 			} else{
-				throw new ConnectionClientException("Server error code: "+ errorCode);
+				throw new ConnectionClientException(ErrorMessages.errors[errorCode]);
 			}
 			
 		} catch (JSONException e) {
@@ -156,7 +156,7 @@ public class ConnectionProtocol {
 					}
 				}
 			} else {
-				throw new ConnectionClientException("Server error code: "+ errCode);
+				throw new ConnectionClientException(ErrorMessages.errors[errCode]);
 			}
 		} catch (JSONException e) {
 			throw new ConnectionClientException("JSONException", e);

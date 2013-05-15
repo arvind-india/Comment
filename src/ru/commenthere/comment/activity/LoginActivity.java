@@ -2,6 +2,7 @@ package ru.commenthere.comment.activity;
 
 
 import ru.commenthere.comment.AppContext;
+import ru.commenthere.comment.Application;
 import ru.commenthere.comment.R;
 import ru.commenthere.comment.R.id;
 import ru.commenthere.comment.R.layout;
@@ -13,10 +14,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 public class LoginActivity extends Activity implements OnClickListener, CustomAsyncTask.AsyncTaskListener {
 
@@ -33,15 +38,35 @@ public class LoginActivity extends Activity implements OnClickListener, CustomAs
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		AppContext appContext = Application.getInstance().getAppContext();
+		if (!TextUtils.isEmpty(appContext.getUserToken())){
+			showMainActivity();
+			return;
+		}
+		
 		setContentView(R.layout.activity_login);
 		instance = this;
 		initViews();
 	}
 	
 	private void initViews(){
-		emailEditText = (EditText)findViewById(R.id.email);
 		sendButton = (Button)findViewById(R.id.send);
 		sendButton.setOnClickListener(this);
+		
+		emailEditText = (EditText)findViewById(R.id.email);
+		emailEditText.setOnEditorActionListener(new OnEditorActionListener() {
+	        @Override
+	        public boolean onEditorAction(TextView v, int actionId,
+	                KeyEvent event) {
+	            if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || actionId == EditorInfo.IME_ACTION_DONE) {	            	
+	            	onClick(sendButton);
+	            	return true;
+	            }
+	            return false;
+	        }
+	    });
+
 	}
 	
 	private boolean validate(){
@@ -66,9 +91,13 @@ public class LoginActivity extends Activity implements OnClickListener, CustomAs
 
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == R.id.send){
+		if (v.getId() == R.id.send){			
 			if (validate()){
-				processSendCode(email);
+		        if (AppUtils.isOnline(this)){
+					processSendCode(email);
+		        }else{
+		        	AppUtils.showToast(this, "Отсутствует подключение к Интернету");
+		        }
 			}
 		}		
 	}
@@ -102,4 +131,8 @@ public class LoginActivity extends Activity implements OnClickListener, CustomAs
 		sendCodeTask = null;
 	}
 
+	private void showMainActivity(){
+		startActivity(new Intent(this, MainActivity.class));
+		finish();
+	}
 }

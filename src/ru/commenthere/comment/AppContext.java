@@ -35,4 +35,34 @@ public class AppContext {
 		this.mPrefs = PreferenceManager.getDefaultSharedPreferences(context);	
 	}
 	
+	public String getUserEmail() {
+		return mPrefs.getString(EMAIL_KEY, "");
+	}
+
+	public void setUserEmail(String email) {
+        Editor editor = mPrefs.edit();
+        editor.putString(EMAIL_KEY, email);
+        editor.commit();		
+	}
+	
+	public int getUserId() {
+		return mPrefs.getInt(USER_ID_KEY, -1);
+	}
+
+	public void setUserId(int userId) {
+        Editor editor = mPrefs.edit();
+        editor.putInt(USER_ID_KEY, userId);
+        editor.commit();		
+	}
+	
+	public String getUserToken() {
+		return mPrefs.getString(TOKEN_KEY, "");
+	}
+
+	public void setUserToken(String token) {
+        Editor editor = mPrefs.edit();
+        editor.putString(TOKEN_KEY, token);
+        editor.commit();		
+	}
+	
 }

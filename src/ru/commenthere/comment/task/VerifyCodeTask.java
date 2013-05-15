@@ -35,5 +35,10 @@ public class VerifyCodeTask extends CustomAsyncTask<Object, String, Boolean>{
 		}
 		return result;
 	}
+
+
+	public User getUser() {
+		return user;
+	}
 	
 }
