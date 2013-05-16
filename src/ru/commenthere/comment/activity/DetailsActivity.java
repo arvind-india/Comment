@@ -1,6 +1,7 @@
 package ru.commenthere.comment.activity;
 
 
+import ru.commenthere.comment.Application;
 import ru.commenthere.comment.R;
 import ru.commenthere.comment.R.id;
 import ru.commenthere.comment.R.layout;
@@ -30,6 +31,18 @@ public class DetailsActivity extends ListActivity implements OnClickListener{
 	@Override
 	public void onClick(View v) {
 		
+	}
+	
+	@Override
+	protected void onStop() {
+		Application.getInstance().decForegroundActiviesCount();
+		super.onStop();
+	}
+
+	@Override
+	protected void onStart() {
+		Application.getInstance().incForegroundActiviesCount();
+		super.onStart();
 	}
 
 }

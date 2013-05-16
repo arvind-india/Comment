@@ -135,4 +135,16 @@ public class LoginActivity extends Activity implements OnClickListener, CustomAs
 		startActivity(new Intent(this, MainActivity.class));
 		finish();
 	}
+	
+	@Override
+	protected void onStop() {
+		Application.getInstance().decForegroundActiviesCount();
+		super.onStop();
+	}
+
+	@Override
+	protected void onStart() {
+		Application.getInstance().incForegroundActiviesCount();
+		super.onStart();
+	}
 }

@@ -12,6 +12,9 @@ public class Note {
 	private int likes;
 	private int dislikes;
 	private int isCanSendComment;
+	private float longitude;
+	private float latitude;
+	
 	
 	public String getFileNamePreview() {
 		return fileNamePreview;
@@ -75,6 +78,18 @@ public class Note {
 		this.isCanSendComment = isCanSendComment;
 	}
 	
+	public float getLongitude() {
+		return longitude;
+	}
+	public void setLongitude(float longitude) {
+		this.longitude = longitude;
+	}
+	public float getLatitude() {
+		return latitude;
+	}
+	public void setLatitude(float latitude) {
+		this.latitude = latitude;
+	}
 	@Override
 	public String toString() {
 		return "Note [fileName=" + fileName + ", description=" + description

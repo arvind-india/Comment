@@ -32,6 +32,8 @@ public class Application extends android.app.Application {
     
     private AppContext appContext = null;
     
+	private int foregroundActiviesCount = 0;
+    
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -101,6 +103,19 @@ public class Application extends android.app.Application {
 		}
 		return instance;
 	}
+	
+    public boolean isForeground() {
+		return foregroundActiviesCount > 0;
+	}
+
+	public void incForegroundActiviesCount(){
+		++foregroundActiviesCount;
+	}
+
+	public void decForegroundActiviesCount(){
+		--foregroundActiviesCount;
+	}
+
 		
 	@Override
 	public void onLowMemory() {

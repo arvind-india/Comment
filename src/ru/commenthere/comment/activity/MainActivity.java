@@ -1,6 +1,7 @@
 package ru.commenthere.comment.activity;
 
 
+import ru.commenthere.comment.Application;
 import ru.commenthere.comment.R;
 import ru.commenthere.comment.R.id;
 import ru.commenthere.comment.R.layout;
@@ -65,5 +66,17 @@ public class MainActivity extends ListActivity implements OnClickListener{
 	private void showSendActivity() {
 		Intent intent = new Intent(this, SendActivity.class);
 		startActivity(intent);		
+	}
+	
+	@Override
+	protected void onStop() {
+		Application.getInstance().decForegroundActiviesCount();
+		super.onStop();
+	}
+
+	@Override
+	protected void onStart() {
+		Application.getInstance().incForegroundActiviesCount();
+		super.onStart();
 	}
 }

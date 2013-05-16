@@ -146,6 +146,44 @@ public class ConnectionClient {
 			throw new ConnectionClientException("IOException", e);
 		}
 	}
+	
+	public String sendPostRequest(String url, HttpEntity entity) throws ConnectionClientException {
+		HttpResponse response = null;
+		
+		HttpPost request = new HttpPost(url);
+
+		if (AppContext.USE_GZIP){
+			request.addHeader("Accept-Encoding", "gzip");
+		};
+
+
+		request.setEntity(entity);
+
+		try {
+			response = client.execute(request);
+			if(response != null) {
+				StatusLine status = response.getStatusLine();
+	
+				if (status.getStatusCode() != STATUS_CODE_OK) {
+					throw new ConnectionClientException("Invalid response from server: " + status.toString());
+				}
+			}
+		} catch (ClientProtocolException e) {
+			throw new ConnectionClientException("ClientProtocolException", e);
+		} catch (IOException e) {
+			throw new ConnectionClientException("IOException", e);
+		}		
+		
+		try {
+			return  EntityUtils.toString(response.getEntity());
+		} catch (ParseException e) {
+			e.printStackTrace();
+			throw new ConnectionClientException("ParseException", e);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new ConnectionClientException("IOException", e);
+		}
+	}
 
 	
 	private HttpClient getHttpClient() {

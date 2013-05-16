@@ -2,13 +2,27 @@ package ru.commenthere.comment.activity;
 
 
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
+
+import ru.commenthere.comment.Application;
 import ru.commenthere.comment.R;
 import ru.commenthere.comment.R.layout;
+import ru.commenthere.comment.model.Note;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Audio.Media;
+import android.provider.MediaStore.Images;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -56,6 +70,7 @@ public class SendActivity extends Activity implements OnClickListener {
 	
 	private void capturePhoto(){
 	    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+       // intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "temp.jpg")));
 	    startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);		
 	}
 	
@@ -70,10 +85,34 @@ public class SendActivity extends Activity implements OnClickListener {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 	        if (resultCode == RESULT_OK) {
-	            // Image captured and saved to fileUri specified in the Intent
-	            Toast.makeText(this, "Image saved to:\n" +
+	            Toast.makeText(this, "Photo saved to:\n" +
 	                     data.getData(), Toast.LENGTH_LONG).show();
-	            fileUri = data.getData();
+	            fileUri  = data.getData();
+//	            if(fileUri == null){
+//	            	Bitmap image = (Bitmap) data.getExtras().get("data");	
+//	            	
+//	            	ContentValues values = new ContentValues();
+//	            	values.put(Images.Media.TITLE, "title");
+//	            	values.put(Images.Media.BUCKET_ID, "test");
+//	            	values.put(Images.Media.DESCRIPTION, "test Image taken");
+//	            	values.put(Images.Media.MIME_TYPE, "image/jpeg");
+//	            	fileUri = getContentResolver().insert(Media.EXTERNAL_CONTENT_URI, values);
+//	            	OutputStream outstream = null;
+//	        		try {
+//	        			outstream = getContentResolver().openOutputStream(fileUri);
+//	        			image.compress(Bitmap.CompressFormat.JPEG, 90, outstream);
+//	        		}catch (FileNotFoundException e) {
+//						e.printStackTrace();
+//	        		}
+//	        		finally{
+//	        			try {
+//							outstream.close();
+//						} catch (IOException e) {
+//							e.printStackTrace();
+//						}	        			
+//	        		}
+//	            }
+
 	            imageView.setVisibility(View.VISIBLE);
 	            videoView.setVisibility(View.GONE);
 	            imageView.setImageURI(fileUri);
@@ -108,8 +147,25 @@ public class SendActivity extends Activity implements OnClickListener {
 		}else if(v.getId() == R.id.take_video){
 			captureVideo();			
 		}else if(v.getId() == R.id.send){
-			
+			processCreateNote();
 		}
 		
+	}
+
+	private void processCreateNote() {
+		Note note = new Note();
+		
+	}
+	
+	@Override
+	protected void onStop() {
+		Application.getInstance().decForegroundActiviesCount();
+		super.onStop();
+	}
+
+	@Override
+	protected void onStart() {
+		Application.getInstance().incForegroundActiviesCount();
+		super.onStart();
 	}
 }

@@ -1,6 +1,5 @@
 package ru.commenthere.comment.activity;
 
-
 import ru.commenthere.comment.AppContext;
 import ru.commenthere.comment.Application;
 import ru.commenthere.comment.R;
@@ -126,6 +125,18 @@ public class ConfirmationCodeActivity extends Activity implements OnClickListene
 		}
 		verifyCodeTask = null;	
 
+	}
+	
+	@Override
+	protected void onStop() {
+		Application.getInstance().decForegroundActiviesCount();
+		super.onStop();
+	}
+
+	@Override
+	protected void onStart() {
+		Application.getInstance().incForegroundActiviesCount();
+		super.onStart();
 	}
 
 }

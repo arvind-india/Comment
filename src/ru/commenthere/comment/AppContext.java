@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.location.Location;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 
@@ -73,6 +74,11 @@ public class AppContext {
         editor.putString(TOKEN_KEY, token);
         editor.commit();		
 	}
+	
+	public boolean isLogged() {
+		return !TextUtils.isEmpty(getUserToken());
+	}
+	
 	
 	public void saveLastLocation(Location location) {
 		Editor editor = mPrefs.edit();

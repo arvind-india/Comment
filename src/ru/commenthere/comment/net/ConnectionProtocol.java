@@ -1,15 +1,22 @@
 package ru.commenthere.comment.net;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import ru.commenthere.comment.AppContext;
+import ru.commenthere.comment.Application;
 import ru.commenthere.comment.model.Note;
 import ru.commenthere.comment.model.User;
+import ru.commenthere.comment.utils.AppUtils;
 
 
 import android.net.Uri;
@@ -25,6 +32,7 @@ public class ConnectionProtocol {
 	private final static String SEND_CODE_ACTION = "send_code";
 	private final static String VERIFY_CODE_ACTION = "verify_code";
 	private final static String GET_NOTES_ACTION = "get_notes";
+	private final static String CREATE_NOTE_ACTION = "create_note";
 	
 	private final static int OK_CODE = 0;
 	
@@ -46,6 +54,9 @@ public class ConnectionProtocol {
 	private final static String DISLIKES_PARAM_NAME= "dislikes";
 	private final static String CAN_SEND_COMMNET_PARAM_NAME = "is_can_send_comment";
 	private final static String FILE_NAME_PREVIEW_PARAM_NAME = "filename_preview";
+	private final static String PHOTO_PARAM_NAME = "photo";
+	private final static String VIDEO_PARAM_NAME = "video";
+
 
 	private ConnectionClient client;
 	private String baseUrl;
@@ -170,5 +181,63 @@ public class ConnectionProtocol {
 		
 		return notes;
 	}
+	
+	public boolean createNote(Note note, String content) throws ConnectionClientException{
+		Uri.Builder ub = Uri.parse(AppContext.API_URL).buildUpon();
+		ub.appendQueryParameter(ACTION_PARAM_NAME, CREATE_NOTE_ACTION);
+		
+		ArrayList<NameValuePair> arguments = new ArrayList<NameValuePair>(); 		
+		arguments.add(new BasicNameValuePair(TOKEN_PARAM_NAME, Application.getInstance().getAppContext().getUserToken()));
+		arguments.add(new BasicNameValuePair(DESCRIPTION_PARAM_NAME, note.getDescription()));
+		arguments.add(new BasicNameValuePair(TYPE_PARAM_NAME, String.valueOf(note.getType())));
+		arguments.add(new BasicNameValuePair(FILE_TYPE_PARAM_NAME, String.valueOf(note.getFileType())));
+	
+		if (note.getType() == 2){
+			arguments.add(new BasicNameValuePair(LONGITUDE_PARAM_NAME, String.valueOf(note.getLongitude())));
+			arguments.add(new BasicNameValuePair(LATITUDE_PARAM_NAME, String.valueOf(note.getLatitude())));		
+		}
+		
+		if (note.getFileType() == 1 /*photo*/){
+			arguments.add(new BasicNameValuePair(PHOTO_PARAM_NAME, content));			
+		}else if(note.getFileType() == 2 /*video*/){
+			arguments.add(new BasicNameValuePair(VIDEO_PARAM_NAME, content));						
+		}
+		
+		HttpEntity entity;
+		try {
+			entity = new UrlEncodedFormEntity(arguments);
+			String response = client.sendPostRequest(ub.toString(),entity);
+			
+			JSONObject result = null;
+			
+			try {
+				result = new JSONObject(response);
+				int errorCode = result.optInt(ERROR_PARAM_NAME);
+				if( errorCode == OK_CODE){
+					JSONObject actionResult = result.getJSONObject(SEND_CODE_ACTION); 
+					if(actionResult.optBoolean(RESULT_PARAM_NAME)){
+						return true;
+					}else{
+						return false;
+					}
+				} else{
+					throw new ConnectionClientException(ErrorMessages.errors[errorCode]);
+				}
+				
+			} catch (JSONException e) {
+				throw new ConnectionClientException("JSONException", e);
+			}
+			
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ConnectionClientException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		return false;
+	}
+	 
+	
 	
 }
