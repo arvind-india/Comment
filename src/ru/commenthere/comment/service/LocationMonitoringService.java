@@ -29,9 +29,11 @@ public class LocationMonitoringService extends Service {
 	public static final String ACTION_CHANGE_REFRESH_INTERVAL = "ru.commenthere.comment.service." +
 			"LocationMonitoringService.ACTION_CHANGE_REFRESH_INTERVAL";
 	public static final String ACTION_CHANGE_ACCURACY = "ru.commenthere.comment.service." +
-	"LocationMonitoringService.ACTION_CHANGE_ACCYRACY";
+		"LocationMonitoringService.ACTION_CHANGE_ACCYRACY";
 	public static final String ACTION_STOP_SERVICE = "ru.commenthere.comment.service." +
-	"LocationMonitoringService.ACTION_STOP_SERVICE";
+		"LocationMonitoringService.ACTION_STOP_SERVICE";
+	public static final String ACTION_NOTES_LIST_RECEIVED = "ru.commenthere.comment.service." +
+		"LocationMonitoringService.ACTION_NOTES_LIST_RECEIVED";
 	
 	public static final String CHANGE_REFRESH_INTERVAL_BUNDLE = "refresh_interval_data";
 	public static final String CHANGE_ACCURACY_BUNDLE = "accuracy_data";
@@ -135,12 +137,18 @@ public class LocationMonitoringService extends Service {
 		counterTimer = null;
 		sendingTimer = null;
 	}
+	
+	private static void sendBroadcastInfo(String action) {
+		Intent actionIntent = new Intent(action);
+		LocalBroadcastManager.getInstance(appContext).sendBroadcast(actionIntent);
+	}
 
 	private static class NetworkLocationListener implements LocationListener {
 
 		@Override
 		public void onLocationChanged(Location location) {
 			lastLocation = location;
+			Application.getInstance().getAppContext().saveLastLocation(lastLocation);
 			if(isDebug) {
 				Log.d(TAG, "Service: received new location ("+lastLocation.getLatitude()+
 						", "+lastLocation.getLongitude()+")");
@@ -211,6 +219,8 @@ public class LocationMonitoringService extends Service {
 						for(Note n : notes) {
 							Log.d(TAG, n.toString());
 						}
+						Application.getInstance().getAppContext().setReceivedNotesList(notes);
+						sendBroadcastInfo(ACTION_NOTES_LIST_RECEIVED);
 					}
 				}
 			} catch (ConnectionClientException e) {
