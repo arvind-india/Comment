@@ -9,6 +9,7 @@ import ru.commenthere.comment.model.Note;
 import ru.commenthere.comment.net.ConnectionClientException;
 import ru.commenthere.comment.net.ConnectionProtocol;
 import ru.commenthere.comment.utils.AppUtils;
+import ru.commenthere.comment.utils.NotificationManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -52,6 +53,8 @@ public class LocationMonitoringService extends Service {
 	private CommandsBroadcastReceiver commandsReceiver;
 	private static ConnectionProtocol connectionProtocol;
 	private static LocationSender sendingTimer;
+	private static NotificationManager notifManager;
+	private static Application application;
 	private static Timer counterTimer;
 	private static Context appContext;
 	
@@ -66,11 +69,13 @@ public class LocationMonitoringService extends Service {
 			Log.d(TAG, "Service: creating service.");
 		}
 		
-		appContext = Application.getInstance().getContext();
+		application = Application.getInstance();
+		appContext = application.getContext();
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		locationListener = new NetworkLocationListener();
 		commandsReceiver = new CommandsBroadcastReceiver();
 		connectionProtocol = new ConnectionProtocol(null);
+		notifManager = new NotificationManager(appContext);
 		
 		LocalBroadcastManager.getInstance(appContext).registerReceiver(commandsReceiver,
 				getCommandsFilter());
@@ -148,7 +153,7 @@ public class LocationMonitoringService extends Service {
 		@Override
 		public void onLocationChanged(Location location) {
 			lastLocation = location;
-			Application.getInstance().getAppContext().saveLastLocation(lastLocation);
+			application.getAppContext().saveLastLocation(lastLocation);
 			if(isDebug) {
 				Log.d(TAG, "Service: received new location ("+lastLocation.getLatitude()+
 						", "+lastLocation.getLongitude()+")");
@@ -195,9 +200,7 @@ public class LocationMonitoringService extends Service {
 			} else {
 				//TODO add another commands handling
 			}
-			
-		}
-		
+		}	
 	}
 	
 	private static class LocationSender extends TimerTask {
@@ -208,7 +211,7 @@ public class LocationMonitoringService extends Service {
 				Log.d(TAG, "Service: sending location to the server");
 			}
 			try {
-				String token = Application.getInstance().getAppContext().getUserToken();
+				String token = application.getAppContext().getUserToken();
 				if(AppUtils.isOnline(appContext) && lastLocation != null
 						&& token != null) {
 					notes = connectionProtocol.getNotes(lastLocation.getLatitude(),
@@ -219,8 +222,17 @@ public class LocationMonitoringService extends Service {
 						for(Note n : notes) {
 							Log.d(TAG, n.toString());
 						}
-						Application.getInstance().getAppContext().setReceivedNotesList(notes);
-						sendBroadcastInfo(ACTION_NOTES_LIST_RECEIVED);
+						
+						application.getAppContext().setReceivedNotesList(notes);
+						
+						if(application.isForeground()) {
+							sendBroadcastInfo(ACTION_NOTES_LIST_RECEIVED);
+						} else {
+							notifManager.createInfoNotification("Notes Available",
+									"For your location new notes available.");
+						}
+						
+						
 					}
 				}
 			} catch (ConnectionClientException e) {
