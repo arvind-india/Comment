@@ -23,6 +23,8 @@ import android.graphics.Canvas;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.text.SpannableStringBuilder;
 import android.text.style.CharacterStyle;
@@ -231,7 +233,7 @@ public class AppUtils {
 	}
 
 	public static String encodeFileToBase64(Context context, String fileName) {
-		File file = new File(context.getFilesDir(), fileName);
+		File file = new File(fileName);
 		String encoded = null;
 		FileInputStream fis;
 		BufferedInputStream bis;
@@ -253,6 +255,7 @@ public class AppUtils {
 		}
 		return encoded;
 	}
+	
 
 	public static String encodeFileToBase64(Context context, File file) {
 		String encoded = null;

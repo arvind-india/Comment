@@ -24,8 +24,8 @@ public class CreateNoteTask extends CustomAsyncTask<Object, String, Boolean>{
 		boolean result = false;
 		try {
 			Note note= (Note)params[0]; 
-			Uri fileUri= (Uri)params[1]; 
-			String content = AppUtils.encodeFileToBase64(context, fileUri.toString());
+			String path = (String)params[1];			
+			String content = AppUtils.encodeFileToBase64(context, path);
 			result = protocol.createNote(note, content);
 		} catch (Exception e) {
 			result = false;

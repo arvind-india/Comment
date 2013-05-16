@@ -1,6 +1,7 @@
 package ru.commenthere.comment.activity;
 
 
+import ru.commenthere.comment.AppContext;
 import ru.commenthere.comment.Application;
 import ru.commenthere.comment.R;
 import ru.commenthere.comment.R.id;
@@ -56,15 +57,16 @@ public class MainActivity extends ListActivity implements OnClickListener{
 		if (v.getId() == R.id.exit_button){
 			finish();
 		}else 	if (v.getId() == R.id.a_button){
-			showSendActivity();
+			showSendActivity(AppContext.PRIVATE_TYPE);
 		}else 	if (v.getId() == R.id.b_button){
-			showSendActivity();
+			showSendActivity(AppContext.EVENT_TYPE);
 		}
 		
 	}
 
-	private void showSendActivity() {
+	private void showSendActivity(int type) {
 		Intent intent = new Intent(this, SendActivity.class);
+		intent.putExtra(AppContext.TYPE_KEY, type);
 		startActivity(intent);		
 	}
 	

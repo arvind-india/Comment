@@ -32,7 +32,16 @@ public class AppContext {
 	public static final String TOKEN_KEY = "token_key";
 	public static final String LATITUDE_KEY = "last_latitude";
 	public static final String LONGITUDE_KEY = "last_longitude";
-		
+	
+	
+	public static final String TYPE_KEY = "key";
+	
+	public static final int PHOTO_FILE_TYPE = 1; 
+	public static final int VIDOE_FILE_TYPE = 2; 
+	
+	
+	public static final int PRIVATE_TYPE = 1;
+	public static final int EVENT_TYPE = 2; 
 	
 	private Context context;
 	private SharedPreferences mPrefs;

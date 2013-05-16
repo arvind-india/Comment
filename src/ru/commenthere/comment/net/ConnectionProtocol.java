@@ -229,13 +229,13 @@ public class ConnectionProtocol {
 			}
 			
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new ConnectionClientException("UnsupportedEncodingException", e);
+			
 		} catch (ConnectionClientException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new ConnectionClientException("ConnectionClientException", e);
 		}		
-		return false;
 	}
 	 
 	
