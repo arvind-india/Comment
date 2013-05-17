@@ -7,6 +7,7 @@ import ru.commenthere.comment.R;
 import ru.commenthere.comment.R.id;
 import ru.commenthere.comment.R.layout;
 import ru.commenthere.comment.service.LocationMonitoringService;
+import ru.commenthere.comment.utils.AppUtils;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
@@ -28,7 +29,7 @@ public class MainActivity extends ListActivity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		initViews();
-		//startLocationService();
+		startLocationService();
 	}
 	
 	@Override
@@ -59,7 +60,13 @@ public class MainActivity extends ListActivity implements OnClickListener{
 		}else 	if (v.getId() == R.id.a_button){
 			showSendActivity(AppContext.PRIVATE_TYPE);
 		}else 	if (v.getId() == R.id.b_button){
-			showSendActivity(AppContext.EVENT_TYPE);
+			if (Application.getInstance().getAppContext().getLastLatitude() == 0 ||
+					Application.getInstance().getAppContext().getLastLongitude()==0){
+			
+				AppUtils.showAlert(this, "Не определена текущая локация. Попробуйте позже.");
+			}else{
+				showSendActivity(AppContext.EVENT_TYPE);
+			}
 		}
 		
 	}
