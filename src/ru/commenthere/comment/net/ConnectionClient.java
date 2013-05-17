@@ -158,7 +158,6 @@ public class ConnectionClient {
 
 
 		request.setEntity(entity);
-
 		try {
 			response = client.execute(request);
 			if(response != null) {

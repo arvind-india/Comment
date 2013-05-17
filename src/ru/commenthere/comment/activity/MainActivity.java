@@ -28,7 +28,7 @@ public class MainActivity extends ListActivity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		initViews();
-		startLocationService();
+		//startLocationService();
 	}
 	
 	@Override

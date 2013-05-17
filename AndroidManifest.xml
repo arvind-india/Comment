@@ -40,6 +40,7 @@
         <activity    
             android:name=".activity.MainActivity"
             android:label="Main" 
+            android:launchMode="singleInstance"
             android:configChanges="orientation|keyboardHidden|screenSize" >
         </activity>
         

@@ -1,9 +1,12 @@
 package ru.commenthere.comment.utils;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,6 +30,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.util.Base64;
 import android.util.DisplayMetrics;
@@ -377,6 +381,33 @@ public class AppUtils {
 	        }
 	    }
 	    return buf.toString();
+	}
+	
+	public static String readFile( String filePath ){
+	    BufferedReader reader;
+		try {
+			reader = new BufferedReader( new FileReader (filePath));
+		    String         line = null;
+		    StringBuilder  stringBuilder = new StringBuilder();
+		    String         ls = System.getProperty("line.separator");
+
+
+				while( ( line = reader.readLine() ) != null ) {
+				    stringBuilder.append( line );
+				    stringBuilder.append( ls );
+				}
+
+		    return stringBuilder.toString();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return "";
+
 	}
 
 }

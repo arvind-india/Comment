@@ -214,7 +214,7 @@ public class ConnectionProtocol {
 				result = new JSONObject(response);
 				int errorCode = result.optInt(ERROR_PARAM_NAME);
 				if( errorCode == OK_CODE){
-					JSONObject actionResult = result.getJSONObject(SEND_CODE_ACTION); 
+					JSONObject actionResult = result.getJSONObject(CREATE_NOTE_ACTION); 
 					if(actionResult.optBoolean(RESULT_PARAM_NAME)){
 						return true;
 					}else{

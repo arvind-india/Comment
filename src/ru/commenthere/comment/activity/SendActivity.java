@@ -90,7 +90,8 @@ public class SendActivity extends Activity implements OnClickListener, CustomAsy
 	
 	private void capturePhoto(){
 	    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-       // intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "temp.jpg")));
+	    fileUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), String.format("photo%s.jpg", System.currentTimeMillis())));
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri );
 	    startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);		
 	}
 	
@@ -105,9 +106,7 @@ public class SendActivity extends Activity implements OnClickListener, CustomAsy
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 	        if (resultCode == RESULT_OK) {
-	            Toast.makeText(this, "Photo saved to:\n" +
-	                     data.getData(), Toast.LENGTH_LONG).show();
-	            fileUri  = data.getData();
+	           // fileUri  = data.getData();
 	            fileType = AppContext.PHOTO_FILE_TYPE;
 //	            if(fileUri == null){
 //	            	Bitmap image = (Bitmap) data.getExtras().get("data");	
@@ -147,8 +146,6 @@ public class SendActivity extends Activity implements OnClickListener, CustomAsy
 	    if (requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
 	        if (resultCode == RESULT_OK) {
 	            // Video captured and saved to fileUri specified in the Intent
-	            Toast.makeText(this, "Video saved to:\n" +
-	                     data.getData(), Toast.LENGTH_LONG).show();
 	            fileUri  = data.getData();
 	            fileType = AppContext.VIDOE_FILE_TYPE;
 
@@ -218,16 +215,20 @@ public class SendActivity extends Activity implements OnClickListener, CustomAsy
 	
 	
 	public String getPath(Uri uri) 
-    {
-        String[] projection = { MediaStore.Images.Media.DATA };
-        android.database.Cursor cursor = managedQuery(uri, projection, null, null, null);
-        if (cursor == null) return null;
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String s=cursor.getString(column_index);
-        cursor.close();
-        return s;
-    }
+    {	
+		if (fileType ==2){
+	        String[] projection = { MediaStore.Images.Media.DATA };
+	        android.database.Cursor cursor = managedQuery(uri, projection, null, null, null);
+	        if (cursor == null) return null;
+	        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+	        cursor.moveToFirst();
+	        String s=cursor.getString(column_index);
+	        cursor.close();
+	        return s;
+		} else{
+			return uri.getPath();
+		}
+	}
 	
 	@Override
 	protected void onStop() {
