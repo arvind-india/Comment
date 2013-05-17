@@ -79,8 +79,13 @@ public class LocationMonitoringService extends Service {
 		
 		LocalBroadcastManager.getInstance(appContext).registerReceiver(commandsReceiver,
 				getCommandsFilter());
-		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+		
+		String provider = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ? 
+				LocationManager.NETWORK_PROVIDER : LocationManager.GPS_PROVIDER;
+
+		locationManager.requestLocationUpdates(provider,
 				locationRefreshInterval, accuracy, locationListener);
+
 		startLocationSending();
 	}
 	
