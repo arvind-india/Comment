@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelaiveLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="horizontal" >
     
+    <ImageView 
+       android:id="@+id/note_item_image"
+       android:background="@drawable/note_image_bg"
+        />
 
-</LinearLayout>
+</RelaiveLayout>
