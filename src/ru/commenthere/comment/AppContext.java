@@ -24,6 +24,8 @@ public class AppContext {
 	
 	public static final String API_URL = "http://comment.dnk-b.ru/api/";
 	
+	public static final String PHOTOS_URL = "http://comment.dnk-b.ru/photos/";
+	public static final String VIDEOS_URL = "http://comment.dnk-b.ru/videos/";
 	
 	public static final boolean USE_GZIP = false; 
 	
@@ -35,6 +37,7 @@ public class AppContext {
 	
 	
 	public static final String TYPE_KEY = "key";
+	public static final String NOTE_KEY = "note";
 	
 	public static final int PHOTO_FILE_TYPE = 1; 
 	public static final int VIDOE_FILE_TYPE = 2; 
