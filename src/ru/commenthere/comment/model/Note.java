@@ -1,7 +1,11 @@
 package ru.commenthere.comment.model;
 
-public class Note {
+import java.io.Serializable;
 
+public class Note implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
 	private String fileName;
 	private String description;
 	private String fileNamePreview;

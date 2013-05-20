@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import ru.commenthere.comment.AppContext;
 import ru.commenthere.comment.Application;
+import ru.commenthere.comment.model.Comment;
 import ru.commenthere.comment.model.Note;
 import ru.commenthere.comment.model.User;
 import ru.commenthere.comment.utils.AppUtils;
@@ -33,6 +34,8 @@ public class ConnectionProtocol {
 	private final static String VERIFY_CODE_ACTION = "verify_code";
 	private final static String GET_NOTES_ACTION = "get_notes";
 	private final static String CREATE_NOTE_ACTION = "create_note";
+	private final static String GET_COMMENTS_ACTION = "get_comments";
+	private final static String ADD_COMMENT_ACTION = "add_comment";
 	
 	private final static int OK_CODE = 0;
 	
@@ -56,7 +59,9 @@ public class ConnectionProtocol {
 	private final static String FILE_NAME_PREVIEW_PARAM_NAME = "filename_preview";
 	private final static String PHOTO_PARAM_NAME = "photo";
 	private final static String VIDEO_PARAM_NAME = "video";
-
+	private final static String NOTE_ID_PARAM_NAME = "note_id";
+	private final static String COMMENT_PARAM_NAME = "comment";
+	private final static String IS_LIKE_PARAM_NAME = "is_like";
 
 	private ConnectionClient client;
 	private String baseUrl;
@@ -169,7 +174,7 @@ public class ConnectionProtocol {
 						}
 					}
 				} else {
-					throw new ConnectionClientException("Error: no items in returned list!!!");
+					//throw new ConnectionClientException("Error: no items in returned list!!!");
 				}
 
 			} else {
@@ -238,6 +243,80 @@ public class ConnectionProtocol {
 		}		
 	}
 	 
+	public List<Comment> getComments(int noteId) throws ConnectionClientException {
+		List<Comment> comments = null;
+		Uri.Builder ub = Uri.parse(AppContext.API_URL).buildUpon();
+		ub.appendQueryParameter(ACTION_PARAM_NAME, GET_COMMENTS_ACTION);
+		ub.appendQueryParameter(NOTE_ID_PARAM_NAME, String.valueOf(noteId));
+		ub.appendQueryParameter(TOKEN_PARAM_NAME, Application.getInstance().getAppContext().getUserToken());
+		
+		String response = client.sendGetRequest(ub.toString());
+		JSONObject result = null;
+		
+		try {
+			result = new JSONObject(response);
+			int errCode = result.optInt(ERROR_PARAM_NAME);
+			if(errCode == OK_CODE) {
+				JSONArray respComments = result.optJSONArray(GET_COMMENTS_ACTION);
+				if(respComments != null) {
+					comments = new ArrayList<Comment>(respComments.length());
+					for(int i = 0; i < respComments.length(); i++) {
+						JSONObject comment = respComments.optJSONObject(i);
+						if(comment != null) {
+							Comment myComment = new Comment();
+							myComment.setId(comment.optInt(ID_PARAM_NAME));
+							myComment.setNoteId(comment.optInt(NOTE_ID_PARAM_NAME));
+							myComment.setUserId(comment.optInt(USER_ID_PARAM_NAME));
+							myComment.setComment(comment.optString(COMMENT_PARAM_NAME));
+							myComment.setIsLike(comment.optInt(IS_LIKE_PARAM_NAME));
+							comments.add(myComment);
+						}
+					}
+				} else {
+					//throw new ConnectionClientException("Error: no items in returned list!!!");
+				}
+
+			} else {
+				throw new ConnectionClientException(ErrorMessages.errors[errCode]);
+			}
+		} catch (JSONException e) {
+			throw new ConnectionClientException("JSONException", e);
+		}
+		
+		return comments;
+	}
+	
+	public boolean addComment(Comment comment) throws ConnectionClientException{
+		Uri.Builder ub = Uri.parse(AppContext.API_URL).buildUpon();
+		ub.appendQueryParameter(ACTION_PARAM_NAME, ADD_COMMENT_ACTION);
+		ub.appendQueryParameter(COMMENT_PARAM_NAME, comment.getComment());
+		ub.appendQueryParameter(NOTE_ID_PARAM_NAME, String.valueOf(comment.getNoteId()));
+		ub.appendQueryParameter(IS_LIKE_PARAM_NAME, String.valueOf(comment.getIsLike()));
+		ub.appendQueryParameter(TOKEN_PARAM_NAME, Application.getInstance().getAppContext().getUserToken());
+
+		String response = client.sendGetRequest(ub.toString());
+		
+		JSONObject result = null; 
+		
+		try {
+			result = new JSONObject(response);
+			int errorCode = result.optInt(ERROR_PARAM_NAME);
+			if( errorCode == OK_CODE){
+				JSONObject actionResult = result.getJSONObject(ADD_COMMENT_ACTION); 
+				if(actionResult.optBoolean(RESULT_PARAM_NAME)){
+					return true;
+				}else{
+					return false;
+				}
+			} else{
+				throw new ConnectionClientException(ErrorMessages.errors[errorCode]);
+			}
+			
+		} catch (JSONException e) {
+			throw new ConnectionClientException("JSONException", e);
+		}
+	}
+
 	
 	
 }
