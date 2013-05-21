@@ -58,23 +58,23 @@ public class NotesAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View result = null;
 		if(convertView == null) {
-			result = inflateListItem();
-			result.setTag(viewHandler);
-		} else {
-			Note note = commentsList.get(position);
-			imageLoader.displayImage(note.getFileNamePreview(),
-					viewHandler.image, imageOptions);
-//			imageLoader.displayImage(note.getFileNamePreview(), 
-//					viewHandler.statusImage, imageOptions);
-			viewHandler.likesAmount.setText(String.valueOf(note.getLikes()));
-			viewHandler.dislikesAmount.setText(String.valueOf(note.getDislikes()));
-//			viewHandler.firstName.setText(note.getUserId());
-//			viewHandler.lastName.setText(note.getUserId());
-			viewHandler.status.setText(note.getDescription());
-		}
-		return result;
+			convertView = inflateListItem();
+			convertView.setTag(viewHandler);
+		} 
+		viewHandler = (ViewHandler) convertView.getTag();
+		Note note = commentsList.get(position);
+		imageLoader.displayImage(note.getFileNamePreview(),
+				viewHandler.image, imageOptions);
+//		imageLoader.displayImage(note.getFileNamePreview(), 
+//				viewHandler.statusImage, imageOptions);
+		viewHandler.likesAmount.setText(String.valueOf(note.getLikes()));
+		viewHandler.dislikesAmount.setText(String.valueOf(note.getDislikes()));
+//		viewHandler.firstName.setText(note.getUserId());
+//		viewHandler.lastName.setText(note.getUserId());
+		viewHandler.status.setText(note.getDescription());
+		convertView.setTag(viewHandler);
+		return convertView;
 	}
 	
 	private View inflateListItem() {
