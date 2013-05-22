@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:paddingBottom="10dip"
         android:paddingLeft="10dip"
         android:paddingRight="5dip"
@@ -20,41 +20,12 @@
         android:id="@+id/note_first_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:layout_toRightOf="@id/note_image"
         android:paddingBottom="5dip"
         android:paddingRight="5dip"
         android:text="Name"
-        android:textColor="@color/black_color"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/note_last_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_toRightOf="@id/note_first_name"
-        android:paddingBottom="5dip"
-        android:text="LastName"
-        android:textColor="@color/black_color" />
-
-    <ImageView
-        android:id="@+id/note_status_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/note_first_name"
-        android:layout_toRightOf="@id/note_image"
-        android:paddingRight="5dip"
-        android:paddingTop="5dip" />
-
-    <TextView
-        android:id="@+id/note_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/note_first_name"
-        android:layout_toRightOf="@id/note_status_image"
-        android:text="Test status"
-        android:textColor="@color/grey_color" />
+        android:textColor="@color/black_color"/>
 
     <TextView
         android:id="@+id/note_dislikes_amount"
@@ -69,7 +40,7 @@
         android:id="@+id/note_add_dislike_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:paddingLeft="10dip"
         android:paddingTop="5dip"
         android:paddingBottom="5dip"
@@ -81,14 +52,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@id/note_add_dislike_btn"
-        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:paddingLeft="5dip" />
 
     <ru.commenthere.comment.view.CustomButton
         android:id="@+id/note_add_like_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:paddingTop="5dip"
         android:paddingBottom="5dip"
         android:layout_toLeftOf="@id/note_likes_amount"

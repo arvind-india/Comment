@@ -68,11 +68,9 @@ public class NotesAdapter extends BaseAdapter {
 				viewHandler.image, imageOptions);
 //		imageLoader.displayImage(note.getFileNamePreview(), 
 //				viewHandler.statusImage, imageOptions);
+		viewHandler.firstName.setText(note.getDescription());
 		viewHandler.likesAmount.setText(String.valueOf(note.getLikes()));
 		viewHandler.dislikesAmount.setText(String.valueOf(note.getDislikes()));
-//		viewHandler.firstName.setText(note.getUserId());
-//		viewHandler.lastName.setText(note.getUserId());
-		viewHandler.status.setText(note.getDescription());
 		convertView.setTag(viewHandler);
 		return convertView;
 	}
@@ -83,10 +81,7 @@ public class NotesAdapter extends BaseAdapter {
 		View layout = (RelativeLayout) inflanter.inflate(R.layout.note_item, null);
 		viewHandler = new ViewHandler();
 		viewHandler.image = (ImageView) layout.findViewById(R.id.note_image);
-		viewHandler.statusImage = (ImageView) layout.findViewById(R.id.note_status_image);
 		viewHandler.firstName = (TextView) layout.findViewById(R.id.note_first_name);
-		viewHandler.lastName = (TextView) layout.findViewById(R.id.note_last_name);
-		viewHandler.status = (TextView) layout.findViewById(R.id.note_status);
 		viewHandler.likesAmount = (TextView) layout.findViewById(R.id.note_likes_amount);
 		viewHandler.dislikesAmount = (TextView) layout.findViewById(R.id.note_dislikes_amount);
 		return layout;
@@ -103,9 +98,7 @@ public class NotesAdapter extends BaseAdapter {
 	
 	private static class ViewHandler {
 		public ImageView image;
-		public ImageView statusImage;
 		public TextView firstName;
-		public TextView lastName;
 		public TextView status;
 		public TextView likesAmount;
 		public TextView dislikesAmount;
