@@ -2,40 +2,54 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:gravity="center"
+    android:orientation="vertical" 
+    android:background="@drawable/fon3">
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dip"
+        android:layout_marginTop="10dip"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="5dip"
         android:layout_weight="1" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:orientation="horizontal" >
-
+        android:layout_marginBottom="10dip"
+        android:orientation="horizontal"
+        >
+        <LinearLayout 
+            android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+            android:background="@drawable/fon2_plashka_to_button"
+            android:layout_centerInParent="true"/>
         <Button
             android:id="@+id/exit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Выход" />
+            android:layout_centerInParent="true"
+            android:background="@drawable/fon2_foto_c2"/>
+        
+		<Button
+            android:id="@+id/b_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/exit_button"
+            android:layout_marginRight="15dip"
+            android:layout_centerVertical="true"
+            android:background="@drawable/fon3_foto_cell"/>
 
         <Button
             android:id="@+id/a_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Личное" />
-
-        <Button
-            android:id="@+id/b_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Событие" />
-    </LinearLayout>
-
+            android:layout_toRightOf="@id/exit_button"
+            android:layout_marginLeft="15dip"
+            android:layout_centerVertical="true"
+            android:background="@drawable/fon3_foto_map"/>
+    </RelativeLayout>
 </LinearLayout>
