@@ -1,11 +1,16 @@
 package ru.commenthere.comment.activity;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ru.commenthere.comment.AppContext;
 import ru.commenthere.comment.Application;
 import ru.commenthere.comment.R;
 import ru.commenthere.comment.R.id;
 import ru.commenthere.comment.R.layout;
+import ru.commenthere.comment.adapter.NotesAdapter;
+import ru.commenthere.comment.model.Note;
 import ru.commenthere.comment.service.LocationMonitoringService;
 import ru.commenthere.comment.utils.AppUtils;
 import android.app.Activity;
@@ -17,12 +22,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 
-public class MainActivity extends ListActivity implements OnClickListener{
+public class MainActivity extends Activity implements OnClickListener{
 	
 	private Button exitButton;
 	private Button aButton;
 	private Button bButton;
+	private ListView list;
+	
+	private NotesAdapter notesAdapter;
+	private List<Note> notes;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +45,7 @@ public class MainActivity extends ListActivity implements OnClickListener{
 	@Override
 	protected void onPause() {
 		super.onPause();
+		//TODO remove this code after real testing
 		Intent serviceStop = new Intent(LocationMonitoringService.ACTION_STOP_SERVICE);
 		LocalBroadcastManager.getInstance(this).sendBroadcast(serviceStop);
 	}
@@ -43,9 +54,15 @@ public class MainActivity extends ListActivity implements OnClickListener{
 		exitButton = (Button)findViewById(R.id.exit_button);
 		aButton = (Button)findViewById(R.id.a_button);
 		bButton = (Button)findViewById(R.id.b_button);
+		list = (ListView) findViewById(R.id.main_list);
+		
+		getMockListData();
+		
 		exitButton.setOnClickListener(this);
 		aButton.setOnClickListener(this);
 		bButton.setOnClickListener(this);
+		notesAdapter = new NotesAdapter(MainActivity.this, notes);
+		list.setAdapter(notesAdapter);
 	}
 	
 	private boolean startLocationService() {
@@ -87,5 +104,19 @@ public class MainActivity extends ListActivity implements OnClickListener{
 	protected void onStart() {
 		Application.getInstance().incForegroundActiviesCount();
 		super.onStart();
+	}
+	
+	private void getMockListData() {
+		notes = new ArrayList<Note>();
+		for(int i = 0; i < 20; i++) {
+			Note note = new Note();
+			note.setDescription("Some test description text...");
+			note.setDislikes(i);
+			note.setLikes(20 - i);
+			note.setFileName("http://kinoman.triolan.com.ua/uploads/posts/2013-04/thumbs/1365855917_bezymyannyj.png");
+			note.setFileNamePreview("http://kinoman.triolan.com.ua/uploads/posts/2013-04/thumbs/1365855917_bezymyannyj.png");
+			note.setId(i);
+			notes.add(note);
+		}
 	}
 }

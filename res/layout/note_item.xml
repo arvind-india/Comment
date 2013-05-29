@@ -25,6 +25,7 @@
         android:layout_toRightOf="@id/note_image"
         android:layout_marginBottom="5dip"
         android:layout_marginRight="5dip"
+        android:ellipsize="end"
         android:text="Name"
         android:textColor="@color/black_color"/>
 
@@ -34,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="15dip"
+        android:layout_marginRight="5dip"
         android:layout_marginLeft="5dip"
         android:text="0" />
 
@@ -43,7 +44,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="30dip"
+        android:layout_marginLeft="15dip"
         android:layout_marginTop="5dip"
         android:layout_marginBottom="5dip"
         android:layout_toLeftOf="@id/note_dislikes_amount"

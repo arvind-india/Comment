@@ -7,7 +7,7 @@
     android:background="@drawable/fon3">
 
     <ListView
-        android:id="@android:id/list"
+        android:id="@+id/main_list"
         android:layout_width="fill_parent"
         android:layout_height="0dip"
         android:layout_marginTop="10dip"
