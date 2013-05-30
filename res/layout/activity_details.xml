@@ -43,7 +43,7 @@
 
     <FrameLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:layout_margin="10dp"
         android:minHeight="120dp" >
 
@@ -63,6 +63,7 @@
     </FrameLayout>
 
     <TextView
+        android:id = "@+id/desc_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -77,6 +78,7 @@
         android:layout_weight="1" />
 
     <EditText
+        android:id = "@+id/comment_edittext"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp" />
