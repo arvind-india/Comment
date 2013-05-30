@@ -1,0 +1,8 @@
+<selector
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<item
+		android:state_selected="true"
+		android:drawable="@drawable/fon2_foto_like1" /> <!-- pressed -->
+	<item
+		android:drawable="@drawable/fon2_foto_like" /> <!-- default -->
+</selector>

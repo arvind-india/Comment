@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fon3"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <RadioGroup
         android:id="@+id/radio_panel"
@@ -18,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/fon2_foto_like"
+            android:background="@drawable/like_button_selector"
             android:button="@null"
             android:checked="true"
             android:text="+" />
@@ -34,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
             android:layout_marginRight="10dp"
-            android:background="@drawable/fon2_foto_unlike1"
+            android:background="@drawable/unlike_button_selector"
             android:button="@null"
             android:text="-" />
     </RadioGroup>
