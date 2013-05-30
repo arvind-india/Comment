@@ -18,40 +18,40 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class NotesAdapter extends BaseAdapter {
 
-	private List<Note> commentsList;
+	private List<Note> notesList;
 	private Context cnt;
 	private ViewHandler viewHandler;
 	private ImageLoader imageLoader;
 	private DisplayImageOptions imageOptions;
 	
 
-	public NotesAdapter(Context context, List<Note> comments) {
+	public NotesAdapter(Context context, List<Note> notes) {
 		cnt = context;
-		commentsList = comments;
+		notesList = notes;
 		imageLoader = ImageLoader.getInstance();
 		imageOptions = createImageOptions();
 	}
 	
 	
 	public void setDataList(List<Note> comments) {
-		commentsList = comments;
+		notesList = comments;
 	}
 	
 	@Override
 	public int getCount() {
-		return commentsList == null ? 0 : commentsList.size();
+		return notesList == null ? 0 : notesList.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return commentsList.get(position);
+		return notesList.get(position);
 	}
 
 	@Override
 	public long getItemId(int position) {
 		long id = 0;
-		if(position >= 0 && position < commentsList.size()) {
-			id = commentsList.get(position).getId();
+		if(position >= 0 && position < notesList.size()) {
+			id = notesList.get(position).getId();
 		}
 		return id;
 	}
@@ -63,7 +63,7 @@ public class NotesAdapter extends BaseAdapter {
 			convertView.setTag(viewHandler);
 		} 
 		viewHandler = (ViewHandler) convertView.getTag();
-		Note note = commentsList.get(position);
+		Note note = notesList.get(position);
 		imageLoader.displayImage(note.getFileNamePreview(),
 				viewHandler.image, imageOptions);
 //		imageLoader.displayImage(note.getFileNamePreview(), 

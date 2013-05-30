@@ -46,6 +46,10 @@ public class AppContext {
 	public static final int PRIVATE_TYPE = 1;
 	public static final int EVENT_TYPE = 2; 
 	
+	public static final int NOTES_LIST_TYPE = 1;
+	public static final int MY_COMMENTS_LIST_TYPE = 2; 
+	
+	
 	private Context context;
 	private SharedPreferences mPrefs;
 	

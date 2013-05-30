@@ -20,19 +20,24 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
-public class MainActivity extends Activity implements OnClickListener{
+public class MainActivity extends Activity implements OnClickListener, OnItemClickListener{
 	
 	private Button exitButton;
-	private Button aButton;
-	private Button bButton;
+	private ImageButton aButton;
+	private ImageButton bButton;
 	private ListView list;
 	
 	private NotesAdapter notesAdapter;
 	private List<Note> notes;
+	
+	private int listType = AppContext.NOTES_LIST_TYPE;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +57,8 @@ public class MainActivity extends Activity implements OnClickListener{
 	
 	private void initViews(){
 		exitButton = (Button)findViewById(R.id.exit_button);
-		aButton = (Button)findViewById(R.id.a_button);
-		bButton = (Button)findViewById(R.id.b_button);
+		aButton = (ImageButton)findViewById(R.id.a_button);
+		bButton = (ImageButton)findViewById(R.id.b_button);
 		list = (ListView) findViewById(R.id.main_list);
 		
 		getMockListData();
@@ -63,6 +68,7 @@ public class MainActivity extends Activity implements OnClickListener{
 		bButton.setOnClickListener(this);
 		notesAdapter = new NotesAdapter(MainActivity.this, notes);
 		list.setAdapter(notesAdapter);
+		list.setOnItemClickListener(this);
 	}
 	
 	private boolean startLocationService() {
@@ -117,6 +123,16 @@ public class MainActivity extends Activity implements OnClickListener{
 			note.setFileNamePreview("http://kinoman.triolan.com.ua/uploads/posts/2013-04/thumbs/1365855917_bezymyannyj.png");
 			note.setId(i);
 			notes.add(note);
+		}
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		if (listType == AppContext.NOTES_LIST_TYPE){
+			Note note = notes.get(position);
+			Intent intent = new Intent(this, DetailsActivity.class);
+			intent.putExtra(AppContext.NOTE_KEY, note);
+			startActivity(intent);
 		}
 	}
 }
