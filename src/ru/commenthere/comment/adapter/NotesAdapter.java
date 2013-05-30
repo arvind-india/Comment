@@ -23,7 +23,6 @@ public class NotesAdapter extends BaseAdapter {
 	private ViewHandler viewHandler;
 	private ImageLoader imageLoader;
 	private DisplayImageOptions imageOptions;
-	
 
 	public NotesAdapter(Context context, List<Note> notes) {
 		cnt = context;
@@ -31,12 +30,11 @@ public class NotesAdapter extends BaseAdapter {
 		imageLoader = ImageLoader.getInstance();
 		imageOptions = createImageOptions();
 	}
-	
-	
+
 	public void setDataList(List<Note> comments) {
 		notesList = comments;
 	}
-	
+
 	@Override
 	public int getCount() {
 		return notesList == null ? 0 : notesList.size();
@@ -50,7 +48,7 @@ public class NotesAdapter extends BaseAdapter {
 	@Override
 	public long getItemId(int position) {
 		long id = 0;
-		if(position >= 0 && position < notesList.size()) {
+		if (position >= 0 && position < notesList.size()) {
 			id = notesList.get(position).getId();
 		}
 		return id;
@@ -58,44 +56,45 @@ public class NotesAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		if(convertView == null) {
+		if (convertView == null) {
 			convertView = inflateListItem();
 			convertView.setTag(viewHandler);
-		} 
+		}
 		viewHandler = (ViewHandler) convertView.getTag();
 		Note note = notesList.get(position);
-		imageLoader.displayImage(note.getFileNamePreview(),
-				viewHandler.image, imageOptions);
-//		imageLoader.displayImage(note.getFileNamePreview(), 
-//				viewHandler.statusImage, imageOptions);
+		imageLoader.displayImage(note.getFileNamePreview(), viewHandler.image,
+				imageOptions);
+		// imageLoader.displayImage(note.getFileNamePreview(),
+		// viewHandler.statusImage, imageOptions);
 		viewHandler.firstName.setText(note.getDescription());
 		viewHandler.likesAmount.setText(String.valueOf(note.getLikes()));
 		viewHandler.dislikesAmount.setText(String.valueOf(note.getDislikes()));
 		convertView.setTag(viewHandler);
 		return convertView;
 	}
-	
+
 	private View inflateListItem() {
-		LayoutInflater inflanter = (LayoutInflater) cnt.getSystemService(Context.
-				LAYOUT_INFLATER_SERVICE);
-		View layout = (RelativeLayout) inflanter.inflate(R.layout.note_item, null);
+		LayoutInflater inflanter = (LayoutInflater) cnt
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View layout = (RelativeLayout) inflanter.inflate(R.layout.note_item,
+				null);
 		viewHandler = new ViewHandler();
 		viewHandler.image = (ImageView) layout.findViewById(R.id.note_image);
-		viewHandler.firstName = (TextView) layout.findViewById(R.id.note_first_name);
-		viewHandler.likesAmount = (TextView) layout.findViewById(R.id.note_likes_amount);
-		viewHandler.dislikesAmount = (TextView) layout.findViewById(R.id.note_dislikes_amount);
+		viewHandler.firstName = (TextView) layout
+				.findViewById(R.id.note_first_name);
+		viewHandler.likesAmount = (TextView) layout
+				.findViewById(R.id.note_likes_amount);
+		viewHandler.dislikesAmount = (TextView) layout
+				.findViewById(R.id.note_dislikes_amount);
 		return layout;
 	}
-	
+
 	private DisplayImageOptions createImageOptions() {
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
-		.resetViewBeforeLoading()
-		.cacheInMemory()
-		.cacheOnDisc()
-		.build();
+				.resetViewBeforeLoading().cacheInMemory().cacheOnDisc().build();
 		return options;
 	}
-	
+
 	private static class ViewHandler {
 		public ImageView image;
 		public TextView firstName;

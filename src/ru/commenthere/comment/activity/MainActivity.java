@@ -1,6 +1,5 @@
 package ru.commenthere.comment.activity;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,18 +26,19 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-public class MainActivity extends Activity implements OnClickListener, OnItemClickListener{
-	
+public class MainActivity extends Activity implements OnClickListener,
+		OnItemClickListener {
+
 	private Button exitButton;
 	private ImageButton aButton;
 	private ImageButton bButton;
 	private ListView list;
-	
+
 	private NotesAdapter notesAdapter;
 	private List<Note> notes;
-	
+
 	private int listType = AppContext.NOTES_LIST_TYPE;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,23 +46,24 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 		initViews();
 		startLocationService();
 	}
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
-		//TODO remove this code after real testing
-		Intent serviceStop = new Intent(LocationMonitoringService.ACTION_STOP_SERVICE);
+		// TODO remove this code after real testing
+		Intent serviceStop = new Intent(
+				LocationMonitoringService.ACTION_STOP_SERVICE);
 		LocalBroadcastManager.getInstance(this).sendBroadcast(serviceStop);
 	}
-	
-	private void initViews(){
-		exitButton = (Button)findViewById(R.id.exit_button);
-		aButton = (ImageButton)findViewById(R.id.a_button);
-		bButton = (ImageButton)findViewById(R.id.b_button);
+
+	private void initViews() {
+		exitButton = (Button) findViewById(R.id.exit_button);
+		aButton = (ImageButton) findViewById(R.id.a_button);
+		bButton = (ImageButton) findViewById(R.id.b_button);
 		list = (ListView) findViewById(R.id.main_list);
-		
+
 		getMockListData();
-		
+
 		exitButton.setOnClickListener(this);
 		aButton.setOnClickListener(this);
 		bButton.setOnClickListener(this);
@@ -70,36 +71,39 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 		list.setAdapter(notesAdapter);
 		list.setOnItemClickListener(this);
 	}
-	
+
 	private boolean startLocationService() {
-		Intent serviceIntent = new Intent(MainActivity.this, LocationMonitoringService.class);
+		Intent serviceIntent = new Intent(MainActivity.this,
+				LocationMonitoringService.class);
 		return startService(serviceIntent) != null;
 	}
 
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == R.id.exit_button){
+		if (v.getId() == R.id.exit_button) {
 			finish();
-		}else 	if (v.getId() == R.id.a_button){
+		} else if (v.getId() == R.id.a_button) {
 			showSendActivity(AppContext.PRIVATE_TYPE);
-		}else 	if (v.getId() == R.id.b_button){
-			if (Application.getInstance().getAppContext().getLastLatitude() == 0 ||
-					Application.getInstance().getAppContext().getLastLongitude()==0){
-			
-				AppUtils.showAlert(this, "Не определена текущая локация. Попробуйте позже.");
-			}else{
+		} else if (v.getId() == R.id.b_button) {
+			if (Application.getInstance().getAppContext().getLastLatitude() == 0
+					|| Application.getInstance().getAppContext()
+							.getLastLongitude() == 0) {
+
+				AppUtils.showAlert(this,
+						"Не определена текущая локация. Попробуйте позже.");
+			} else {
 				showSendActivity(AppContext.EVENT_TYPE);
 			}
 		}
-		
+
 	}
 
 	private void showSendActivity(int type) {
 		Intent intent = new Intent(this, SendActivity.class);
 		intent.putExtra(AppContext.TYPE_KEY, type);
-		startActivity(intent);		
+		startActivity(intent);
 	}
-	
+
 	@Override
 	protected void onStop() {
 		Application.getInstance().decForegroundActiviesCount();
@@ -111,10 +115,10 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 		Application.getInstance().incForegroundActiviesCount();
 		super.onStart();
 	}
-	
+
 	private void getMockListData() {
 		notes = new ArrayList<Note>();
-		for(int i = 0; i < 20; i++) {
+		for (int i = 0; i < 20; i++) {
 			Note note = new Note();
 			note.setDescription("Some test description text...");
 			note.setDislikes(i);
@@ -127,8 +131,9 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		if (listType == AppContext.NOTES_LIST_TYPE){
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		if (listType == AppContext.NOTES_LIST_TYPE) {
 			Note note = notes.get(position);
 			Intent intent = new Intent(this, DetailsActivity.class);
 			intent.putExtra(AppContext.NOTE_KEY, note);

@@ -1,6 +1,5 @@
 package ru.commenthere.comment.activity;
 
-
 import ru.commenthere.comment.AppContext;
 import ru.commenthere.comment.Application;
 import ru.commenthere.comment.R;
@@ -18,18 +17,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.VideoView;
 
-public class DetailsActivity extends ListActivity implements OnClickListener{
-	
+public class DetailsActivity extends ListActivity implements OnClickListener {
+
 	private ImageView imageView;
 	private VideoView videoView;
-	
+
 	private Button backButton;
 	private Button downloadButton;
 	private Button sendButton;
-	
+
 	private Note note;
-	
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,20 +35,20 @@ public class DetailsActivity extends ListActivity implements OnClickListener{
 		initViews();
 		parseParams();
 	}
-	
-	private void parseParams(){
-		note = (Note)getIntent().getSerializableExtra(AppContext.NOTE_KEY);
+
+	private void parseParams() {
+		note = (Note) getIntent().getSerializableExtra(AppContext.NOTE_KEY);
 	}
-	
-	private void initViews(){
+
+	private void initViews() {
 
 	}
 
 	@Override
 	public void onClick(View v) {
-		
+
 	}
-	
+
 	@Override
 	protected void onStop() {
 		Application.getInstance().decForegroundActiviesCount();
