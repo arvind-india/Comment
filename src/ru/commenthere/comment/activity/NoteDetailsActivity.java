@@ -1,5 +1,7 @@
 package ru.commenthere.comment.activity;
 
+import java.util.List;
+
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -8,6 +10,9 @@ import ru.commenthere.comment.Application;
 import ru.commenthere.comment.R;
 import ru.commenthere.comment.R.id;
 import ru.commenthere.comment.R.layout;
+import ru.commenthere.comment.adapter.CommentsAdapter;
+import ru.commenthere.comment.adapter.NotesAdapter;
+import ru.commenthere.comment.model.Comment;
 import ru.commenthere.comment.model.Note;
 import ru.commenthere.comment.task.AddCommentTask;
 import ru.commenthere.comment.task.CustomAsyncTask;
@@ -29,15 +34,19 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.VideoView;
 
 public class NoteDetailsActivity extends ListActivity implements OnClickListener, CustomAsyncTask.AsyncTaskListener {
 	private RadioGroup radioPanel;
+	private RadioButton likeButton;
+	private RadioButton dislikeButton;
 	
 	private ImageView imageView;
 	private VideoView videoView;
+	
 
 	private TextView descTextView;
 	private EditText commentEditText;
@@ -53,6 +62,9 @@ public class NoteDetailsActivity extends ListActivity implements OnClickListener
 	private DisplayImageOptions imageOptions;
 
 	private Note note;
+	
+	private List<Comment> comments;
+	private CommentsAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +81,10 @@ public class NoteDetailsActivity extends ListActivity implements OnClickListener
 	}
 
 	private void initViews() {
-		radioPanel = (RadioGroup)findViewById(R.id.radio_panel);
+		radioPanel = (RadioGroup)findViewById(R.id.radio_panel);		
+		likeButton = (RadioButton)findViewById(R.id.button_like);		
+		dislikeButton = (RadioButton)findViewById(R.id.button_dislike);		
+		
 		imageView = (ImageView)findViewById(R.id.image_view);
 		videoView = (VideoView)findViewById(R.id.video_view);
 		
@@ -94,16 +109,32 @@ public class NoteDetailsActivity extends ListActivity implements OnClickListener
 		if (note.getFileType()==AppContext.PHOTO_FILE_TYPE){
 			videoView.setVisibility(View.GONE);
 			imageView.setVisibility(View.VISIBLE);			
-			imageLoader.displayImage(AppContext.PHOTOS_URL + note.getFileName(), imageView, imageOptions);
+			String photoUrl =  note.getFileName().startsWith("http://") ? note.getFileName() : AppContext.PHOTOS_URL + note.getFileName();
+			imageLoader.displayImage(photoUrl, imageView, imageOptions);
 		}else{
 			videoView.setVisibility(View.VISIBLE);
 			imageView.setVisibility(View.GONE);
-			videoView.setVideoURI(Uri.parse(AppContext.VIDEOS_URL + note.getFileName()));
+			String videoUrl =  note.getFileName().startsWith("http://") ? note.getFileName() : AppContext.VIDEOS_URL + note.getFileName();
+			videoView.setVideoURI(Uri.parse(videoUrl));
 		}
 		
 		descTextView.setText(note.getDescription());
 		
+		commentEditText.setEnabled(note.getIsCanSendComment() ==1);
+		sendButton.setEnabled(note.getIsCanSendComment() ==1);
+		
 		processGetComments(note.getId());
+		
+	}
+	
+	private void fillCommentsList(){
+		if (comments == null){
+			return;
+		}
+		
+		adapter = new CommentsAdapter(this, comments);
+		getListView().setAdapter(adapter);
+		
 		
 	}
 	
@@ -127,19 +158,28 @@ public class NoteDetailsActivity extends ListActivity implements OnClickListener
 
 	}
 	
-	private void processAddComment(String commentText) {
+	private void processAddComment(Comment comment) {
 		if (addCommentTask == null) {
 			addCommentTask = new AddCommentTask(this);
 			addCommentTask.setShowProgress(true);
 			addCommentTask.setAsyncTaskListener(this);
-			addCommentTask.execute(commentText);
+			addCommentTask.execute(comment);
 		}
 	}
 	
 	private void sendComment(){
 		if (validate()) {
 			if (AppUtils.isOnline(this)) {
-				processAddComment(commentEditText.getText().toString().trim());
+				Comment comment = new Comment();
+				comment.setNoteId(note.getId());
+				comment.setComment(commentEditText.getText().toString().trim());
+				if(likeButton.isChecked()){
+					comment.setIsLike(1);	
+				}else if (dislikeButton.isChecked()){
+					comment.setIsLike(0);				
+				}
+				
+				processAddComment(comment);
 			} else {
 				AppUtils.showToast(this,
 						"Отсутствует подключение к Интернету");
@@ -162,9 +202,9 @@ public class NoteDetailsActivity extends ListActivity implements OnClickListener
 	private void downloadFile(){
 		String url = null;
 		if (note.getFileType()==AppContext.PHOTO_FILE_TYPE){
-			url = AppContext.PHOTOS_URL + note.getFileName();
+			url =  note.getFileName().startsWith("http://") ? note.getFileName() : AppContext.PHOTOS_URL + note.getFileName();
 		}else{
-			url = AppContext.VIDEOS_URL + note.getFileName();
+			url =  note.getFileName().startsWith("http://") ? note.getFileName() : AppContext.VIDEOS_URL + note.getFileName();
 		}
 		
 		DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
@@ -208,7 +248,22 @@ public class NoteDetailsActivity extends ListActivity implements OnClickListener
 
 	@Override
 	public void onTaskFinished(CustomAsyncTask<?, ?, ?> task) {
-		// TODO Auto-generated method stub
+		if (task == getCommentsTask){
+			if ((Boolean) task.getResult()) {
+				comments = ((GetCommentsTask)task).getComments();
+				fillCommentsList();
+			} else {
+				AppUtils.showAlert(this, task.getErrorMessage());
+			}
+			getCommentsTask = null;			
+		} else if (task == addCommentTask){
+			if ((Boolean) task.getResult()) {
+				finish();
+			} else {
+				AppUtils.showAlert(this, task.getErrorMessage());
+			}
+			addCommentTask = null;
+		}
 		
 	}
 

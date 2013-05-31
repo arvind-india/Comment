@@ -2,6 +2,7 @@ package ru.commenthere.comment.adapter;
 
 import java.util.List;
 
+import ru.commenthere.comment.AppContext;
 import ru.commenthere.comment.R;
 import ru.commenthere.comment.model.Note;
 import android.content.Context;
@@ -62,7 +63,9 @@ public class NotesAdapter extends BaseAdapter {
 		}
 		viewHandler = (ViewHandler) convertView.getTag();
 		Note note = notesList.get(position);
-		imageLoader.displayImage(note.getFileNamePreview(), viewHandler.image,
+		String imageUrl =  note.getFileName().startsWith("http://") ? note.getFileNamePreview() : AppContext.PHOTOS_URL + note.getFileNamePreview();
+
+		imageLoader.displayImage(imageUrl, viewHandler.image,
 				imageOptions);
 		// imageLoader.displayImage(note.getFileNamePreview(),
 		// viewHandler.statusImage, imageOptions);

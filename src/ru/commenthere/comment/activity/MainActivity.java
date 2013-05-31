@@ -126,6 +126,8 @@ public class MainActivity extends Activity implements OnClickListener,
 			note.setFileName("http://kinoman.triolan.com.ua/uploads/posts/2013-04/thumbs/1365855917_bezymyannyj.png");
 			note.setFileNamePreview("http://kinoman.triolan.com.ua/uploads/posts/2013-04/thumbs/1365855917_bezymyannyj.png");
 			note.setId(i);
+			note.setFileType(AppContext.PHOTO_FILE_TYPE);
+			note.setIsCanSendComment(1);
 			notes.add(note);
 		}
 	}

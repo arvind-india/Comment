@@ -2,9 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/fon3_plashka"
     android:orientation="horizontal"
-    android:padding="5dp" >
+    android:background="@drawable/border">
 
     <TextView
         android:id="@+id/comment_title"
@@ -12,6 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
+        android:layout_marginLeft="5dp"
         android:text="Comment:" />
 
     <ImageView
@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:src="@drawable/fon2_foto_like" />
 
 </LinearLayout>
