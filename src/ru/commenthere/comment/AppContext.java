@@ -32,6 +32,8 @@ public class AppContext {
 	public static final String TOKEN_KEY = "token_key";
 	public static final String LATITUDE_KEY = "last_latitude";
 	public static final String LONGITUDE_KEY = "last_longitude";
+	public static final String EVENTS_LIST_KEY = "events_list";
+	public static final String LIST_TYPE_KEY = "events_list_type";
 
 	public static final String TYPE_KEY = "key";
 	public static final String NOTE_KEY = "note";

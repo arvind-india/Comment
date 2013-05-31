@@ -1,10 +1,14 @@
 package ru.commenthere.comment.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import ru.commenthere.comment.AppContext;
 import ru.commenthere.comment.Application;
+import ru.commenthere.comment.activity.MainActivity;
+import ru.commenthere.comment.model.Comment;
 import ru.commenthere.comment.model.Note;
 import ru.commenthere.comment.net.ConnectionClientException;
 import ru.commenthere.comment.net.ConnectionProtocol;
@@ -35,6 +39,8 @@ public class LocationMonitoringService extends Service {
 			+ "LocationMonitoringService.ACTION_STOP_SERVICE";
 	public static final String ACTION_NOTES_LIST_RECEIVED = "ru.commenthere.comment.service."
 			+ "LocationMonitoringService.ACTION_NOTES_LIST_RECEIVED";
+	public static final String ACTION_COMMENTS_LIST_RECEIVED = "ru.commenthere.comment.service."
+		+ "LocationMonitoringService.ACTION_COMMENTS_LIST_RECEIVED";
 
 	public static final String CHANGE_REFRESH_INTERVAL_BUNDLE = "refresh_interval_data";
 	public static final String CHANGE_ACCURACY_BUNDLE = "accuracy_data";
@@ -151,10 +157,10 @@ public class LocationMonitoringService extends Service {
 		sendingTimer = null;
 	}
 
-	private static void sendBroadcastInfo(String action) {
-		Intent actionIntent = new Intent(action);
+	private static void sendBroadcastInfo(String action, Intent actionData) {
+		actionData.setAction(action);
 		LocalBroadcastManager.getInstance(appContext).sendBroadcast(
-				actionIntent);
+				actionData);
 	}
 
 	private static class NetworkLocationListener implements LocationListener {
@@ -218,7 +224,8 @@ public class LocationMonitoringService extends Service {
 	private static class LocationSender extends TimerTask {
 		@Override
 		public void run() {
-			List<Note> notes = null;
+			ArrayList<Note> notes = null;
+			ArrayList<Comment> newComments = null;
 			if (isDebug) {
 				Log.d(TAG, "Service: sending location to the server");
 			}
@@ -226,26 +233,33 @@ public class LocationMonitoringService extends Service {
 				String token = application.getAppContext().getUserToken();
 				if (AppUtils.isOnline(appContext) && lastLocation != null
 						&& token != null) {
-					notes = connectionProtocol.getNotes(
+					notes = (ArrayList<Note>) connectionProtocol.getNotes(
 							lastLocation.getLatitude(),
 							lastLocation.getLongitude(), token);
 					if (notes != null) {
-						// temporary. need logic for handling received notes
-						Log.d(TAG, "Received " + notes.size() + " notes.");
-						for (Note n : notes) {
-							Log.d(TAG, n.toString());
-						}
-
-						application.getAppContext().setReceivedNotesList(notes);
-
+						Intent mainActivity = new Intent(appContext, MainActivity.class);
+						mainActivity.putExtra(AppContext.EVENTS_LIST_KEY, notes);
+						mainActivity.putExtra(AppContext.LIST_TYPE_KEY,
+								AppContext.NOTES_LIST_TYPE);
 						if (application.isForeground()) {
-							sendBroadcastInfo(ACTION_NOTES_LIST_RECEIVED);
+							sendBroadcastInfo(ACTION_NOTES_LIST_RECEIVED, mainActivity);
 						} else {
 							notifManager.createInfoNotification(
 									"Notes Available",
-									"For your location new notes available.");
+									"For your location new notes available.", mainActivity);
 						}
-
+					}
+					if(ConnectionProtocol.isNewCommentsAvailable()) {
+						newComments = (ArrayList<Comment>) connectionProtocol.getNewComments();
+						if(newComments != null && newComments.size() > 0) {
+							Intent mainActivity = new Intent(appContext, MainActivity.class);
+							mainActivity.putExtra(AppContext.EVENTS_LIST_KEY, newComments);
+							mainActivity.putExtra(AppContext.LIST_TYPE_KEY,
+									AppContext.MY_COMMENTS_LIST_TYPE);
+							notifManager.createInfoNotification(
+									"New comments Available",
+									"For your post new comments available.", mainActivity);
+						}
 					}
 				}
 			} catch (ConnectionClientException e) {

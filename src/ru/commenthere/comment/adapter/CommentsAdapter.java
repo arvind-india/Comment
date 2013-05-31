@@ -1,21 +1,15 @@
 package ru.commenthere.comment.adapter;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import ru.commenthere.comment.R;
 import ru.commenthere.comment.model.Comment;
-
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class CommentsAdapter extends BaseAdapter {

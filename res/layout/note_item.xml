@@ -14,6 +14,8 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dip"
         android:layout_marginRight="10dip"
+        android:layout_marginTop="5dip"
+        android:layout_marginBottom="5dip"
         android:background="@drawable/note_image_bg"
         android:src="@drawable/fon2_foto_like1" />
 
@@ -26,6 +28,7 @@
         android:layout_toLeftOf="@+id/note_add_like_btn"
         android:layout_marginBottom="5dip"
         android:layout_marginRight="5dip"
+        android:maxLength="50"
         android:ellipsize="end"
         android:text="Name"
         android:textColor="@color/black_color"/>

@@ -63,7 +63,8 @@ public class NotesAdapter extends BaseAdapter {
 		}
 		viewHandler = (ViewHandler) convertView.getTag();
 		Note note = notesList.get(position);
-		String imageUrl =  note.getFileName().startsWith("http://") ? note.getFileNamePreview() : AppContext.PHOTOS_URL + note.getFileNamePreview();
+		String imageUrl =  note.getFileName().startsWith("http") ? note.getFileNamePreview() 
+				: AppContext.PHOTOS_URL + note.getFileNamePreview();
 
 		imageLoader.displayImage(imageUrl, viewHandler.image,
 				imageOptions);

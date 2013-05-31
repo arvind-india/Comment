@@ -1,12 +1,25 @@
 package ru.commenthere.comment.model;
 
-public class Comment {
+import java.io.Serializable;
 
+public class Comment implements Serializable {
+
+	private static final long serialVersionUID = 5L;
+	
 	private int id;
 	private int noteId;
 	private int userId;
 	private String comment;
 	private int isLike;
+	private String filePreviewUrl;
+
+	public String getFilePreviewUrl() {
+		return filePreviewUrl;
+	}
+
+	public void setFilePreviewUrl(String filePreviewUrl) {
+		this.filePreviewUrl = filePreviewUrl;
+	}
 
 	public int getId() {
 		return id;

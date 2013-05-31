@@ -32,6 +32,7 @@ public class ConnectionProtocol {
 	private final static String CREATE_NOTE_ACTION = "create_note";
 	private final static String GET_COMMENTS_ACTION = "get_comments";
 	private final static String ADD_COMMENT_ACTION = "add_comment";
+	private final static String GET_NEW_COMMENTS_ACTION = "get_new_comments_for_my_notes";
 
 	private final static int OK_CODE = 0;
 
@@ -58,7 +59,11 @@ public class ConnectionProtocol {
 	private final static String NOTE_ID_PARAM_NAME = "note_id";
 	private final static String COMMENT_PARAM_NAME = "comment";
 	private final static String IS_LIKE_PARAM_NAME = "is_like";
+	private static final String HAS_NEW_COMMENTS_NAME = "is_has_new_comments";
+	private static final String NEW_COMMENTS_ARRAY = "get_new_comments_for_my_notes";
 
+	private static boolean hasNewComments;
+	
 	private ConnectionClient client;
 	private String baseUrl;
 
@@ -149,11 +154,13 @@ public class ConnectionProtocol {
 
 		String response = client.sendGetRequest(ub.toString());
 		JSONObject result = null;
+		hasNewComments = false;
 
 		try {
 			result = new JSONObject(response);
 			int errCode = result.optInt(ERROR_PARAM_NAME);
 			if (errCode == OK_CODE) {
+				hasNewComments = result.optBoolean(HAS_NEW_COMMENTS_NAME);
 				JSONArray respNotes = result.optJSONArray(GET_NOTES_ACTION);
 				if (respNotes != null) {
 					notes = new ArrayList<Note>(respNotes.length());
@@ -349,5 +356,44 @@ public class ConnectionProtocol {
 			throw new ConnectionClientException("JSONException", e);
 		}
 	}
+	
+	public List<Comment> getNewComments() throws ConnectionClientException {
+		List<Comment> newComments = null;
+		Uri.Builder ub = Uri.parse(AppContext.API_URL).buildUpon();
+		ub.appendQueryParameter(ACTION_PARAM_NAME, GET_COMMENTS_ACTION);
+		ub.appendQueryParameter(TOKEN_PARAM_NAME, Application.getInstance()
+				.getAppContext().getUserToken());
+		
+		String response = client.sendGetRequest(ub.toString());
+		JSONObject result = null;
+		
+		try {
+			result = new JSONObject(response);
+			int errorCode = result.optInt(ERROR_PARAM_NAME);
+			
+			if(errorCode == OK_CODE) {
+				JSONArray comments = result.optJSONArray(NEW_COMMENTS_ARRAY);
+				newComments = new ArrayList<Comment>(comments.length());
+				for(int i = 0; i < comments.length(); i++) {
+					Comment comment = new Comment();
+					JSONObject rawComment = comments.optJSONObject(i);
+					comment.setComment(rawComment.optString(CODE_PARAM_NAME));
+					comment.setId(rawComment.optInt(NOTE_ID_PARAM_NAME));
+					comment.setIsLike(rawComment.optInt(IS_LIKE_PARAM_NAME));
+					comment.setNoteId(rawComment.optInt(NOTE_ID_PARAM_NAME));
+					comment.setUserId(rawComment.optInt(USER_ID_PARAM_NAME));
+					comment.setFilePreviewUrl(rawComment.optString(FILE_NAME_PREVIEW_PARAM_NAME));
+					newComments.add(comment);
+				}
+			}
+		} catch (JSONException e) {
+			throw new ConnectionClientException("JSONException", e);
+		}
+		
+		return newComments;
+	}
 
+	public static boolean isNewCommentsAvailable() {
+		return hasNewComments;
+	}
 }

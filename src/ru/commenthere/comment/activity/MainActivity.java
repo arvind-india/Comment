@@ -8,13 +8,18 @@ import ru.commenthere.comment.Application;
 import ru.commenthere.comment.R;
 import ru.commenthere.comment.R.id;
 import ru.commenthere.comment.R.layout;
+import ru.commenthere.comment.adapter.CommentsAdapter;
 import ru.commenthere.comment.adapter.NotesAdapter;
+import ru.commenthere.comment.model.Comment;
 import ru.commenthere.comment.model.Note;
 import ru.commenthere.comment.service.LocationMonitoringService;
 import ru.commenthere.comment.utils.AppUtils;
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
@@ -35,7 +40,10 @@ public class MainActivity extends Activity implements OnClickListener,
 	private ListView list;
 
 	private NotesAdapter notesAdapter;
-	private List<Note> notes;
+	private CommentsAdapter commentsAdapter;
+	private ArrayList<Note> notes;
+	private ArrayList<Comment> newComments;
+	private ActionListReceiver listReceiver;
 
 	private int listType = AppContext.NOTES_LIST_TYPE;
 
@@ -44,7 +52,21 @@ public class MainActivity extends Activity implements OnClickListener,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		initViews();
+		listReceiver = new ActionListReceiver();
 		startLocationService();
+		handleStartData(getIntent());
+		
+		//temporary
+		getMockListData();
+		notesAdapter = new NotesAdapter(MainActivity.this, notes);
+		list.setAdapter(notesAdapter);
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		LocalBroadcastManager.getInstance(this).registerReceiver(listReceiver,
+				new IntentFilter(LocationMonitoringService.ACTION_NOTES_LIST_RECEIVED));
 	}
 
 	@Override
@@ -53,6 +75,7 @@ public class MainActivity extends Activity implements OnClickListener,
 		// TODO remove this code after real testing
 		Intent serviceStop = new Intent(
 				LocationMonitoringService.ACTION_STOP_SERVICE);
+		LocalBroadcastManager.getInstance(this).unregisterReceiver(listReceiver);
 		LocalBroadcastManager.getInstance(this).sendBroadcast(serviceStop);
 	}
 
@@ -62,14 +85,31 @@ public class MainActivity extends Activity implements OnClickListener,
 		bButton = (ImageButton) findViewById(R.id.b_button);
 		list = (ListView) findViewById(R.id.main_list);
 
-		getMockListData();
-
 		exitButton.setOnClickListener(this);
 		aButton.setOnClickListener(this);
 		bButton.setOnClickListener(this);
-		notesAdapter = new NotesAdapter(MainActivity.this, notes);
-		list.setAdapter(notesAdapter);
 		list.setOnItemClickListener(this);
+	}
+	
+	private void handleStartData(Intent intent) {
+		Bundle extras = intent.getExtras();
+		if(extras != null) {
+			int type = extras.getInt(AppContext.LIST_TYPE_KEY);
+			if(type == AppContext.NOTES_LIST_TYPE) {
+				listType = AppContext.NOTES_LIST_TYPE;
+				notes = (ArrayList<Note>) extras.getSerializable(AppContext.EVENTS_LIST_KEY);
+				notesAdapter = new NotesAdapter(MainActivity.this, notes);
+				list.setAdapter(notesAdapter);
+			} else if(type == AppContext.MY_COMMENTS_LIST_TYPE) {
+				listType = AppContext.MY_COMMENTS_LIST_TYPE;
+				newComments = (ArrayList<Comment>) extras.getSerializable(
+						AppContext.EVENTS_LIST_KEY);
+				commentsAdapter = new CommentsAdapter(MainActivity.this, newComments);
+				list.setAdapter(commentsAdapter);
+			} else {
+				//TODO what we do at the first start without nay data???
+			}
+		}
 	}
 
 	private boolean startLocationService() {
@@ -140,6 +180,20 @@ public class MainActivity extends Activity implements OnClickListener,
 			Intent intent = new Intent(this, NoteDetailsActivity.class);
 			intent.putExtra(AppContext.NOTE_KEY, note);
 			startActivity(intent);
+		}
+	}
+	
+	private class ActionListReceiver extends BroadcastReceiver  {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if(LocationMonitoringService.ACTION_NOTES_LIST_RECEIVED.
+					equals(intent.getAction())) {
+				listType = intent.getIntExtra(AppContext.LIST_TYPE_KEY,
+						AppContext.NOTES_LIST_TYPE);
+				notes = (ArrayList<Note>) intent.getSerializableExtra(AppContext.EVENTS_LIST_KEY);
+				notesAdapter.notifyDataSetChanged();
+			}
 		}
 	}
 }

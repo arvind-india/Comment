@@ -29,8 +29,7 @@ public class NotificationManager {
 		notificationMap = null;
 	}
 
-	public int createInfoNotification(String title, String msg) {
-		Intent notificationIntent = new Intent(); // TODO add action!
+	public int createInfoNotification(String title, String msg, Intent actionIntent) {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(
 				mContext);
 		builder.setSmallIcon(android.R.drawable.sym_action_chat);
@@ -38,7 +37,7 @@ public class NotificationManager {
 		builder.setTicker(title);
 		builder.setContentText(msg);
 		builder.setContentIntent(PendingIntent.getActivity(mContext, 0,
-				notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT));
+				actionIntent, PendingIntent.FLAG_CANCEL_CURRENT));
 		builder.setWhen(System.currentTimeMillis());
 		builder.setContentTitle(title);
 		builder.setDefaults(Notification.DEFAULT_SOUND);
