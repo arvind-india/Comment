@@ -51,11 +51,12 @@
             android:configChanges="orientation|keyboardHidden|screenSize" >
         </activity>
         
-                <activity
-            android:name=".activity.DetailsActivity"
-            android:label="Details" 
+        <activity
+            android:name=".activity.NoteDetailsActivity"
+            android:label="Note Details" 
             android:configChanges="orientation|keyboardHidden|screenSize" >
         </activity>
+        
         <service android:permission="android.permission.ACCESS_COARSE_LOCATION" 
             	 android:name=".service.LocationMonitoringService">
             

@@ -9,6 +9,11 @@ import ru.commenthere.comment.R;
 import ru.commenthere.comment.R.id;
 import ru.commenthere.comment.R.layout;
 import ru.commenthere.comment.model.Note;
+import ru.commenthere.comment.task.AddCommentTask;
+import ru.commenthere.comment.task.CustomAsyncTask;
+import ru.commenthere.comment.task.GetCommentsTask;
+import ru.commenthere.comment.task.SendCodeTask;
+import ru.commenthere.comment.utils.AppUtils;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.ListActivity;
@@ -18,6 +23,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -27,7 +33,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.VideoView;
 
-public class DetailsActivity extends ListActivity implements OnClickListener {
+public class NoteDetailsActivity extends ListActivity implements OnClickListener, CustomAsyncTask.AsyncTaskListener {
 	private RadioGroup radioPanel;
 	
 	private ImageView imageView;
@@ -40,6 +46,8 @@ public class DetailsActivity extends ListActivity implements OnClickListener {
 	private Button downloadButton;
 	private Button sendButton;
 	
+	private GetCommentsTask getCommentsTask = null;
+	private AddCommentTask addCommentTask = null;
 	
 	private ImageLoader imageLoader;
 	private DisplayImageOptions imageOptions;
@@ -95,6 +103,48 @@ public class DetailsActivity extends ListActivity implements OnClickListener {
 		
 		descTextView.setText(note.getDescription());
 		
+		processGetComments(note.getId());
+		
+	}
+	
+	private void processGetComments(int noteId) {
+		if (getCommentsTask == null) {
+			getCommentsTask = new GetCommentsTask(this);
+			getCommentsTask.setShowProgress(true);
+			getCommentsTask.setAsyncTaskListener(this);
+			getCommentsTask.execute(noteId);
+		}
+	}
+	
+	private boolean validate() {
+		String comment = commentEditText.getText().toString().trim();
+		if (TextUtils.isEmpty(comment)) {
+			AppUtils.showAlert(this, "Заполните поле comment");
+			return false;
+		}
+
+		return true;
+
+	}
+	
+	private void processAddComment(String commentText) {
+		if (addCommentTask == null) {
+			addCommentTask = new AddCommentTask(this);
+			addCommentTask.setShowProgress(true);
+			addCommentTask.setAsyncTaskListener(this);
+			addCommentTask.execute(commentText);
+		}
+	}
+	
+	private void sendComment(){
+		if (validate()) {
+			if (AppUtils.isOnline(this)) {
+				processAddComment(commentEditText.getText().toString().trim());
+			} else {
+				AppUtils.showToast(this,
+						"Отсутствует подключение к Интернету");
+			}
+		}
 	}
 
 	@Override
@@ -104,7 +154,7 @@ public class DetailsActivity extends ListActivity implements OnClickListener {
 		} else if(v.getId() == R.id.button_download){
 			downloadFile();			
 		} else if (v.getId() == R.id.button_send){
-			
+			sendComment();			
 		}
 
 	}
@@ -148,6 +198,18 @@ public class DetailsActivity extends ListActivity implements OnClickListener {
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
 				.resetViewBeforeLoading().cacheInMemory().cacheOnDisc().build();
 		return options;
+	}
+
+	@Override
+	public void onBeforeTaskStarted(CustomAsyncTask<?, ?, ?> task) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTaskFinished(CustomAsyncTask<?, ?, ?> task) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -135,7 +135,7 @@ public class MainActivity extends Activity implements OnClickListener,
 			long id) {
 		if (listType == AppContext.NOTES_LIST_TYPE) {
 			Note note = notes.get(position);
-			Intent intent = new Intent(this, DetailsActivity.class);
+			Intent intent = new Intent(this, NoteDetailsActivity.class);
 			intent.putExtra(AppContext.NOTE_KEY, note);
 			startActivity(intent);
 		}
