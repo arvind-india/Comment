@@ -2,12 +2,50 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:background="@drawable/fon3"
+    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <RadioGroup
+        android:id="@+id/radio_panel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/button_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/like_button_selector"
+            android:button="@null"
+            android:checked="true"
+            android:text="+" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <RadioButton
+            android:id="@+id/button_dislike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/unlike_button_selector"
+            android:button="@null"
+            android:text="-" />
+    </RadioGroup>
 
     <FrameLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp">
+        android:layout_height="150dp"
+        android:layout_margin="5dp"
+        android:minHeight="110dp" >
 
         <ImageView
             android:id="@+id/image_view"
@@ -24,23 +62,31 @@
             android:visibility="gone" />
     </FrameLayout>
 
-    <EditText
+    <TextView
+        android:id = "@+id/desc_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:editable="false"
+        android:layout_margin="5dp"
+        android:paddingLeft="5dp"     
+        android:background="@drawable/border"
         android:gravity="top"
         android:lines="3" />
-    <ListView 
+
+    <ListView
         android:id="@android:id/list"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        />
+        android:layout_height="0dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_weight="1" />
+
     <EditText
+        android:id = "@+id/comment_edittext"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"/>
+        android:singleLine="true"
+        android:paddingLeft="5dp"
+        android:layout_margin="5dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -48,58 +94,25 @@
         android:orientation="horizontal" >
 
         <Button
-             android:id="@+id/button_back"
+            android:id="@+id/button_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="К списку" />
 
         <Button
-             android:id="@+id/button_download"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Скачать" />
-
-        <Button
-             android:id="@+id/button_send"
+            android:id="@+id/button_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="C" />
 
-          <RadioGroup
-        android:id="@+id/radio_panel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal" >
-
-        <RadioButton
-            android:id="@+id/button_like"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+        <Button
+            android:id="@+id/button_download"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:checked="true"
-            android:padding="10dp"
-            android:gravity="center"
-            android:button="@null"
-            android:text="+" />
-
-        <RadioButton
-            android:id="@+id/button_dislike"
-
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:gravity="center"
-                        android:button="@null"
-            android:text="-" />
-
-
-    </RadioGroup>
-        
+            android:text="Скачать" />
     </LinearLayout>
 
 </LinearLayout>

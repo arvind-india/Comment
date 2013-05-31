@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/note_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dip"
@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/note_image"
+        android:layout_toLeftOf="@+id/note_add_like_btn"
         android:layout_marginBottom="5dip"
         android:layout_marginRight="5dip"
         android:ellipsize="end"
@@ -47,6 +48,8 @@
         android:layout_marginLeft="15dip"
         android:layout_marginTop="5dip"
         android:layout_marginBottom="5dip"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:layout_toLeftOf="@id/note_dislikes_amount"
         android:background="@drawable/fon2_foto_unlike1" />
 
@@ -66,6 +69,8 @@
         android:layout_centerVertical="true"
         android:layout_marginTop="5dip"
         android:layout_marginBottom="5dip"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:layout_toLeftOf="@id/note_likes_amount"
         android:background="@drawable/fon2_foto_like" />
 

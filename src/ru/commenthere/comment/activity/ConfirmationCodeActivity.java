@@ -23,16 +23,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-public class ConfirmationCodeActivity extends Activity implements OnClickListener, CustomAsyncTask.AsyncTaskListener  {
-	
+public class ConfirmationCodeActivity extends Activity implements
+		OnClickListener, CustomAsyncTask.AsyncTaskListener {
+
 	private EditText codeEditText;
 	private Button sendButton;
-	
+
 	private String email;
 	private String code;
-	
+
 	private VerifyCodeTask verifyCodeTask = null;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -40,64 +41,66 @@ public class ConfirmationCodeActivity extends Activity implements OnClickListene
 		parseParams();
 		initViews();
 	}
-	
-	private void parseParams(){
+
+	private void parseParams() {
 		email = getIntent().getStringExtra(AppContext.EMAIL_KEY);
 	}
-	
-	private void initViews(){
-		sendButton = (Button)findViewById(R.id.send);
+
+	private void initViews() {
+		sendButton = (Button) findViewById(R.id.send);
 		sendButton.setOnClickListener(this);
-		
-		codeEditText = (EditText)findViewById(R.id.code);
+
+		codeEditText = (EditText) findViewById(R.id.code);
 		codeEditText.setOnEditorActionListener(new OnEditorActionListener() {
-	        @Override
-	        public boolean onEditorAction(TextView v, int actionId,
-	                KeyEvent event) {
-	            if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || actionId == EditorInfo.IME_ACTION_DONE) {	            	
-	            	onClick(sendButton);
-	            	return true;
-	            }
-	            return false;
-	        }
-	    });
+			@Override
+			public boolean onEditorAction(TextView v, int actionId,
+					KeyEvent event) {
+				if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER))
+						|| actionId == EditorInfo.IME_ACTION_DONE) {
+					onClick(sendButton);
+					return true;
+				}
+				return false;
+			}
+		});
 
 	}
-	
-	private boolean validate(){
+
+	private boolean validate() {
 		code = codeEditText.getText().toString().trim();
-		if (TextUtils.isEmpty(code)){
+		if (TextUtils.isEmpty(code)) {
 			AppUtils.showAlert(this, "Заполните поле код подтверждения");
 			return false;
 		}
-		
+
 		return true;
-		
+
 	}
-	
-    private void processVerifyCode(String email, String code){
-		if (verifyCodeTask == null){
+
+	private void processVerifyCode(String email, String code) {
+		if (verifyCodeTask == null) {
 			verifyCodeTask = new VerifyCodeTask(this);
 			verifyCodeTask.setShowProgress(true);
-			verifyCodeTask.setAsyncTaskListener(this);			
+			verifyCodeTask.setAsyncTaskListener(this);
 			verifyCodeTask.execute(email, code);
 		}
-    }
+	}
 
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == R.id.send){
-			if (validate()){
-		        if (AppUtils.isOnline(this)){
+		if (v.getId() == R.id.send) {
+			if (validate()) {
+				if (AppUtils.isOnline(this)) {
 					processVerifyCode(email, code);
-		        }else{
-		        	AppUtils.showToast(this, "Отсутствует подключение к Интернету");
-		        }
+				} else {
+					AppUtils.showToast(this,
+							"Отсутствует подключение к Интернету");
+				}
 			}
-		}		
+		}
 	}
-	
-	private void showMainActivity(){
+
+	private void showMainActivity() {
 		startActivity(new Intent(this, MainActivity.class));
 		finish();
 		LoginActivity.toFinish();
@@ -106,27 +109,27 @@ public class ConfirmationCodeActivity extends Activity implements OnClickListene
 	@Override
 	public void onBeforeTaskStarted(CustomAsyncTask<?, ?, ?> task) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onTaskFinished(CustomAsyncTask<?, ?, ?> task) {
-		if((Boolean)task.getResult()){
-			
-			User user = ((VerifyCodeTask)task).getUser();
+		if ((Boolean) task.getResult()) {
+
+			User user = ((VerifyCodeTask) task).getUser();
 			AppContext appContext = Application.getInstance().getAppContext();
 			appContext.setUserEmail(user.getEmail());
 			appContext.setUserId(user.getId());
 			appContext.setUserToken(user.getToken());
-			
+
 			showMainActivity();
-		} else{
+		} else {
 			AppUtils.showAlert(this, task.getErrorMessage());
 		}
-		verifyCodeTask = null;	
+		verifyCodeTask = null;
 
 	}
-	
+
 	@Override
 	protected void onStop() {
 		Application.getInstance().decForegroundActiviesCount();
