@@ -73,7 +73,7 @@ public class MainActivity extends Activity implements OnClickListener,
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		handleStartData(getIntent());
+		handleStartData(intent);
 	}
 
 

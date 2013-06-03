@@ -360,7 +360,7 @@ public class ConnectionProtocol {
 	public List<Comment> getNewComments() throws ConnectionClientException {
 		List<Comment> newComments = null;
 		Uri.Builder ub = Uri.parse(AppContext.API_URL).buildUpon();
-		ub.appendQueryParameter(ACTION_PARAM_NAME, GET_COMMENTS_ACTION);
+		ub.appendQueryParameter(ACTION_PARAM_NAME, GET_NEW_COMMENTS_ACTION);
 		ub.appendQueryParameter(TOKEN_PARAM_NAME, Application.getInstance()
 				.getAppContext().getUserToken());
 		
