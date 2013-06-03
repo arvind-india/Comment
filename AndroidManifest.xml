@@ -36,8 +36,12 @@
             android:name=".activity.ConfirmationCodeActivity"            
             android:label="Confirmation code" 
             android:configChanges="orientation|keyboardHidden|screenSize" >
+        </activity>        
+         <activity    
+            android:name=".activity.DashboardActivity"
+            android:label="Dashboard" 
+            android:configChanges="orientation|keyboardHidden|screenSize" >
         </activity>
-        
         <activity    
             android:name=".activity.MainActivity"
             android:label="Main" 
