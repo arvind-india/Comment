@@ -11,18 +11,18 @@
         android:orientation="vertical" >
 
         <ImageButton
-            android:id="@+id/b_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:src="@drawable/a_button_selector" />
-
-        <ImageButton
             android:id="@+id/a_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:src="@drawable/b_button_selector" />
+
+        <ImageButton
+            android:id="@+id/b_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/a_button_selector" />
     </LinearLayout>
 
 </RelativeLayout>

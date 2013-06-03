@@ -34,6 +34,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.Toast;
@@ -49,9 +50,9 @@ public class SendActivity extends Activity implements OnClickListener,
 
 	private Uri fileUri;
 
-	private Button takePhotoButton;
-	private Button takeVideoButton;
-	private Button sendButton;
+	private ImageButton takePhotoButton;
+	private ImageButton takeVideoButton;
+	private ImageButton sendButton;
 
 	private ImageView imageView;
 	private VideoView videoView;
@@ -84,9 +85,9 @@ public class SendActivity extends Activity implements OnClickListener,
 		videoView = (VideoView) findViewById(R.id.video_view);
 		videoView.setMediaController(new MediaController(this));
 
-		takePhotoButton = (Button) findViewById(R.id.take_photo);
-		takeVideoButton = (Button) findViewById(R.id.take_video);
-		sendButton = (Button) findViewById(R.id.send);
+		takePhotoButton = (ImageButton) findViewById(R.id.take_photo);
+		takeVideoButton = (ImageButton) findViewById(R.id.take_video);
+		sendButton = (ImageButton) findViewById(R.id.send);
 
 		takePhotoButton.setOnClickListener(this);
 		takeVideoButton.setOnClickListener(this);

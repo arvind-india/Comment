@@ -34,8 +34,10 @@ import android.widget.ListView;
 
 public class MainActivity extends Activity implements OnClickListener,
 		OnItemClickListener {
+	
+	private static final int NOTE_DETAILS_ACTIVITY_REQUEST_CODE = 100;
 
-	private Button exitButton;
+	private ImageButton exitButton;
 	private ImageButton aButton;
 	private ImageButton bButton;
 	private ListView list;
@@ -56,8 +58,8 @@ public class MainActivity extends Activity implements OnClickListener,
 		
 		handleStartData(getIntent());
 
-		listReceiver = new ActionListReceiver();
-		registerReceiver(listReceiver, new IntentFilter(LocationMonitoringService.ACTION_NOTES_LIST_RECEIVED));
+		//listReceiver = new ActionListReceiver();
+		//registerReceiver(listReceiver, new IntentFilter(LocationMonitoringService.ACTION_NOTES_LIST_RECEIVED));
 
 		startLocationService();
 	}
@@ -75,8 +77,8 @@ public class MainActivity extends Activity implements OnClickListener,
 	@Override
 	protected void onResume() {
 		super.onResume();
-		LocalBroadcastManager.getInstance(this).registerReceiver(listReceiver,
-				new IntentFilter(LocationMonitoringService.ACTION_NOTES_LIST_RECEIVED));
+//		LocalBroadcastManager.getInstance(this).registerReceiver(listReceiver,
+//				new IntentFilter(LocationMonitoringService.ACTION_NOTES_LIST_RECEIVED));
 	}
 
 	@Override
@@ -92,14 +94,14 @@ public class MainActivity extends Activity implements OnClickListener,
 	
 	@Override
 	protected void onDestroy() {
-		unregisterReceiver(listReceiver);
+		//unregisterReceiver(listReceiver);
 		super.onDestroy();
 	}
 
 
 
 	private void initViews() {
-		exitButton = (Button) findViewById(R.id.exit_button);
+		exitButton = (ImageButton) findViewById(R.id.exit_button);
 		aButton = (ImageButton) findViewById(R.id.a_button);
 		bButton = (ImageButton) findViewById(R.id.b_button);
 		list = (ListView) findViewById(R.id.main_list);
@@ -206,7 +208,28 @@ public class MainActivity extends Activity implements OnClickListener,
 				if (note  != null){
 					Intent intent = new Intent(this, NoteDetailsActivity.class);
 					intent.putExtra(AppContext.NOTE_KEY, note);
-					startActivity(intent);
+					intent.putExtra(AppContext.POSITION_KEY, position);
+					startActivityForResult(intent, NOTE_DETAILS_ACTIVITY_REQUEST_CODE);
+				}
+			}
+		}
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == NOTE_DETAILS_ACTIVITY_REQUEST_CODE) {
+			if (resultCode == RESULT_OK) {
+				int position = data.getIntExtra(AppContext.POSITION_KEY, 0);
+				boolean isLike = data.getBooleanExtra(AppContext.IS_LIKE_KEY, false);
+				if (notesAdapter != null && notes != null && position < notes.size()){
+					Note note = notes.get(position);
+					if (isLike){
+						note.setLikes(note.getLikes()+1);
+					} else{
+						note.setDislikes(note.getDislikes()+1);
+					}
+					notesAdapter.notifyDataSetChanged();
+					
 				}
 			}
 		}
