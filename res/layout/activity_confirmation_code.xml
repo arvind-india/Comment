@@ -1,10 +1,9 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical" 
-    android:background="@drawable/fon3">
+    android:background="@drawable/fon_hello">
 
     <EditText
         android:id="@+id/code"
@@ -12,15 +11,18 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:hint="Введите код"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:layout_centerInParent="true"
+        android:background="@drawable/fon3_plashka" />
 
     <Button
         android:id="@+id/send"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:inputType="number"
-        android:numeric="integer"
-        android:text="Отправить" />
+        android:layout_width="100dip"
+        android:layout_height="130dip"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="35dip"
+        android:layout_marginRight="35dip"
+        android:background="@android:color/transparent"/>
 
-</LinearLayout>
+</RelativeLayout>

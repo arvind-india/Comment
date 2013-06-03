@@ -32,33 +32,49 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:gravity="top"
-        android:lines="3" />
+        android:lines="3"
+        android:background="@drawable/fon3_plashka" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/take_photo"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dip"
+        android:orientation="horizontal"
+        >
+        <LinearLayout 
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Фото" />
+        	android:layout_height="wrap_content"
+            android:background="@drawable/fon2_plashka_to_button"
+            android:layout_centerInParent="true"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="С" />
+            android:layout_centerInParent="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/fon2_foto_c"/>
+        
+       <ImageButton
+            android:id="@+id/take_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/send"
+            android:layout_marginRight="15dip"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/fon2_foto_krug_cam" />
 
-        <Button
+        <ImageButton
             android:id="@+id/take_video"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Видео" />
-    </LinearLayout>
+            android:layout_toRightOf="@id/send"
+            android:layout_marginLeft="15dip"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/fon2_foto_krug_cam" />
+    </RelativeLayout>
 
 </LinearLayout>

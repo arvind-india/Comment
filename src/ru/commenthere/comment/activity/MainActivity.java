@@ -59,13 +59,7 @@ public class MainActivity extends Activity implements OnClickListener,
 		listReceiver = new ActionListReceiver();
 		registerReceiver(listReceiver, new IntentFilter(LocationMonitoringService.ACTION_NOTES_LIST_RECEIVED));
 
-		startLocationService();
-
-		
-		//temporary
-		getMockListData();
-		notesAdapter = new NotesAdapter(MainActivity.this, notes);
-		list.setAdapter(notesAdapter);
+//		startLocationService();
 	}
 	
 	
@@ -89,10 +83,10 @@ public class MainActivity extends Activity implements OnClickListener,
 	protected void onPause() {
 		super.onPause();
 		// TODO remove this code after real testing
-		Intent serviceStop = new Intent(
-				LocationMonitoringService.ACTION_STOP_SERVICE);
-		LocalBroadcastManager.getInstance(this).unregisterReceiver(listReceiver);
-		LocalBroadcastManager.getInstance(this).sendBroadcast(serviceStop);
+//		Intent serviceStop = new Intent(
+//				LocationMonitoringService.ACTION_STOP_SERVICE);
+//		LocalBroadcastManager.getInstance(this).unregisterReceiver(listReceiver);
+//		LocalBroadcastManager.getInstance(this).sendBroadcast(serviceStop);
 	}
 
 	
