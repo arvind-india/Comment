@@ -40,6 +40,9 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 public class NoteDetailsActivity extends ListActivity implements OnClickListener, CustomAsyncTask.AsyncTaskListener {
+	
+
+	
 	private RadioGroup radioPanel;
 	private RadioButton likeButton;
 	private RadioButton dislikeButton;
