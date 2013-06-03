@@ -106,5 +106,4 @@ public class NotesAdapter extends BaseAdapter {
 		public TextView likesAmount;
 		public TextView dislikesAmount;
 	}
-
 }
