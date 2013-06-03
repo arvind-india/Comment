@@ -3,7 +3,9 @@ package ru.commenthere.comment.activity;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import ru.commenthere.comment.AppContext;
@@ -27,6 +29,7 @@ import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.Media;
 import android.provider.MediaStore.Images;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -38,6 +41,8 @@ import android.widget.VideoView;
 
 public class SendActivity extends Activity implements OnClickListener,
 		CustomAsyncTask.AsyncTaskListener {
+	
+	public static final String TAG ="SendActivity"; 
 
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 	private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
@@ -118,7 +123,20 @@ public class SendActivity extends Activity implements OnClickListener,
 					imageView.setImageBitmap(image);
 					
 				}else{
-					imageView.setImageURI(fileUri);
+					//imageView.setImageURI(fileUri);
+
+					Bitmap smallImage = getBitmap(fileUri);
+						if (smallImage != null){
+						try {
+						       FileOutputStream out = new FileOutputStream(getPath(fileUri));
+						       smallImage.compress(Bitmap.CompressFormat.PNG, 90, out);
+							   imageView.setImageBitmap(smallImage);
+						} catch (Exception e) {
+						       e.printStackTrace();
+						}
+					}
+
+
 				}
 			} else if (resultCode == RESULT_CANCELED) {
 				// User cancelled the image capture
@@ -245,4 +263,44 @@ public class SendActivity extends Activity implements OnClickListener,
 		createNoteTask = null;
 
 	}
-}
+	
+	
+	private Bitmap getBitmap(Uri uri) {
+
+		InputStream in = null;
+		    final int IMAGE_MAX_SIZE = 480; 
+		    Bitmap bitmapPhoto = null;
+		    try {
+				in = getContentResolver().openInputStream(uri);
+			    // Decode image size
+			    BitmapFactory.Options o = new BitmapFactory.Options();
+			    bitmapPhoto = BitmapFactory.decodeStream(in, null, o);
+			    try {
+					in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				int maxSize = 400;
+				int h = bitmapPhoto.getHeight();
+				int w = bitmapPhoto.getWidth();
+				if( h > maxSize || w > maxSize) {
+					int h1, w1;
+					double ar = (double)w/(double)h;
+					if(h > w) {
+						h1 = maxSize;
+						w1 = (int)(maxSize*ar);
+					} else {
+						w1 = maxSize;
+						h1 = (int)(maxSize/ar);
+					}			
+					bitmapPhoto = Bitmap.createScaledBitmap(bitmapPhoto, w1, h1, true);
+				}	
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+
+
+			return bitmapPhoto;
+		}
+	}
