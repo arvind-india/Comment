@@ -215,7 +215,12 @@ public class NoteDetailsActivity extends ListActivity implements OnClickListener
 		    request.allowScanningByMediaScanner();
 		    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 		}
-		request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, note.getFileName());
+		String fileName = note.getFileName();
+	
+		if (fileName.startsWith("http://")){
+			fileName = fileName.substring( fileName.lastIndexOf('/')+1, fileName.length());
+		}  																	
+		request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
 
 		// get download service and enqueue file
 		DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);

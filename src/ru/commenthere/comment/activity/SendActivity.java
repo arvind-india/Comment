@@ -110,38 +110,16 @@ public class SendActivity extends Activity implements OnClickListener,
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
-				// fileUri = data.getData();
 				fileType = AppContext.PHOTO_FILE_TYPE;
-				// if(fileUri == null){
-				// Bitmap image = (Bitmap) data.getExtras().get("data");
-				//
-				// ContentValues values = new ContentValues();
-				// values.put(Images.Media.TITLE, "title");
-				// values.put(Images.Media.BUCKET_ID, "test");
-				// values.put(Images.Media.DESCRIPTION, "test Image taken");
-				// values.put(Images.Media.MIME_TYPE, "image/jpeg");
-				// fileUri =
-				// getContentResolver().insert(Media.EXTERNAL_CONTENT_URI,
-				// values);
-				// OutputStream outstream = null;
-				// try {
-				// outstream = getContentResolver().openOutputStream(fileUri);
-				// image.compress(Bitmap.CompressFormat.JPEG, 90, outstream);
-				// }catch (FileNotFoundException e) {
-				// e.printStackTrace();
-				// }
-				// finally{
-				// try {
-				// outstream.close();
-				// } catch (IOException e) {
-				// e.printStackTrace();
-				// }
-				// }
-				// }
-
 				imageView.setVisibility(View.VISIBLE);
 				videoView.setVisibility(View.GONE);
-				imageView.setImageURI(fileUri);
+				if (data != null && data.getExtras().get("data") != null){
+					Bitmap image = (Bitmap) data.getExtras().get("data");
+					imageView.setImageBitmap(image);
+					
+				}else{
+					imageView.setImageURI(fileUri);
+				}
 			} else if (resultCode == RESULT_CANCELED) {
 				// User cancelled the image capture
 			} else {
