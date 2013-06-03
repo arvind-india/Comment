@@ -31,6 +31,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
         android:gravity="top"
         android:lines="3"
         android:background="@drawable/fon3_plashka" />
