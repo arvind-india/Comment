@@ -105,6 +105,12 @@ public class ConfirmationCodeActivity extends Activity implements
 		finish();
 		LoginActivity.toFinish();
 	}
+	
+	private void showDashboard() {
+		startActivity(new Intent(this, DashboardActivity.class));
+		finish();
+		LoginActivity.toFinish();
+	}
 
 	@Override
 	public void onBeforeTaskStarted(CustomAsyncTask<?, ?, ?> task) {
@@ -122,7 +128,8 @@ public class ConfirmationCodeActivity extends Activity implements
 			appContext.setUserId(user.getId());
 			appContext.setUserToken(user.getToken());
 
-			showMainActivity();
+			//showMainActivity();
+			showDashboard();
 		} else {
 			AppUtils.showAlert(this, task.getErrorMessage());
 		}

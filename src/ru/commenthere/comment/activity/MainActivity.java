@@ -146,6 +146,7 @@ public class MainActivity extends Activity implements OnClickListener,
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.exit_button) {
+			showDashboard();
 			finish();
 		} else if (v.getId() == R.id.a_button) {
 			showSendActivity(AppContext.PRIVATE_TYPE);
@@ -166,6 +167,11 @@ public class MainActivity extends Activity implements OnClickListener,
 	private void showSendActivity(int type) {
 		Intent intent = new Intent(this, SendActivity.class);
 		intent.putExtra(AppContext.TYPE_KEY, type);
+		startActivity(intent);
+	}
+	
+	private void showDashboard() {
+		Intent intent = new Intent(this, DashboardActivity.class);
 		startActivity(intent);
 	}
 

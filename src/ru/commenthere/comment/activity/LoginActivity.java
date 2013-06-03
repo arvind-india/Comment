@@ -39,7 +39,8 @@ public class LoginActivity extends Activity implements OnClickListener,
 
 		AppContext appContext = Application.getInstance().getAppContext();
 		if (!TextUtils.isEmpty(appContext.getUserToken())) {
-			showMainActivity();
+			//showMainActivity();
+			showDashboard();
 			return;
 		}
 
@@ -133,6 +134,10 @@ public class LoginActivity extends Activity implements OnClickListener,
 
 	private void showMainActivity() {
 		startActivity(new Intent(this, MainActivity.class));
+		finish();
+	}
+	private void showDashboard() {
+		startActivity(new Intent(this, DashboardActivity.class));
 		finish();
 	}
 
