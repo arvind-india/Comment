@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -54,9 +55,9 @@ public class NoteDetailsActivity extends ListActivity implements OnClickListener
 	private TextView descTextView;
 	private EditText commentEditText;
 	
-	private Button backButton;
-	private Button downloadButton;
-	private Button sendButton;
+	private ImageButton backButton;
+	private ImageButton downloadButton;
+	private ImageButton sendButton;
 	
 	private GetCommentsTask getCommentsTask = null;
 	private AddCommentTask addCommentTask = null;
@@ -64,6 +65,7 @@ public class NoteDetailsActivity extends ListActivity implements OnClickListener
 	private ImageLoader imageLoader;
 	private DisplayImageOptions imageOptions;
 
+	private int position;
 	private Note note;
 	
 	private List<Comment> comments;
@@ -80,6 +82,7 @@ public class NoteDetailsActivity extends ListActivity implements OnClickListener
 	}
 
 	private void parseParams() {
+		position = getIntent().getIntExtra(AppContext.POSITION_KEY, 0);
 		note = (Note) getIntent().getSerializableExtra(AppContext.NOTE_KEY);
 	}
 
@@ -94,9 +97,9 @@ public class NoteDetailsActivity extends ListActivity implements OnClickListener
 		descTextView  = (TextView)findViewById(R.id.desc_text);
 		commentEditText = (EditText)findViewById(R.id.comment_edittext);
 		
-		backButton = (Button)findViewById(R.id.button_back);
-		downloadButton = (Button)findViewById(R.id.button_download);
-		sendButton = (Button)findViewById(R.id.button_send); 
+		backButton = (ImageButton)findViewById(R.id.button_back);
+		downloadButton = (ImageButton)findViewById(R.id.button_download);
+		sendButton = (ImageButton)findViewById(R.id.button_send); 
 
 		backButton.setOnClickListener(this);
 		downloadButton.setOnClickListener(this);
@@ -266,6 +269,10 @@ public class NoteDetailsActivity extends ListActivity implements OnClickListener
 			getCommentsTask = null;			
 		} else if (task == addCommentTask){
 			if ((Boolean) task.getResult()) {
+				Intent data = new Intent();
+				data.putExtra(AppContext.POSITION_KEY, position);
+				data.putExtra(AppContext.IS_LIKE_KEY, likeButton.isChecked());
+				setResult(RESULT_OK, data);
 				finish();
 			} else {
 				AppUtils.showAlert(this, task.getErrorMessage());
