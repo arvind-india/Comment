@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border">
+
+    <ImageView 
+        android:id="@+id/new_comment_image"
+        android:layout_height="48dip"
+        android:layout_width="48dip"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dip"
+        android:layout_marginTop="5dip"
+        android:layout_marginBottom="5dip"
+        android:background="@drawable/note_image_bg"
+        android:src="@drawable/fon2_foto_like1"
+        />
+    
+    <TextView
+        android:id="@+id/new_comment_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/new_comment_image"
+        android:maxLength="50"
+        android:text="Comment:" />
+
+    <ImageView
+        android:id="@+id/new_comment_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:src="@drawable/fon2_foto_like" />
+
+</RelativeLayout>
