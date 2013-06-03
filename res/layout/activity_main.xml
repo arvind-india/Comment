@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:src="@drawable/fon2_foto_c2"
+            android:src="@drawable/c_button_selector"
             android:background="@android:color/transparent"/>
         
 		<ImageButton
@@ -43,7 +43,7 @@
             android:layout_toLeftOf="@id/exit_button"
             android:layout_marginRight="15dip"
             android:layout_centerVertical="true"
-            android:src="@drawable/fon3_foto_cell"
+            android:src="@drawable/phone_button"
             android:background="@android:color/transparent"
             />
 
@@ -54,7 +54,7 @@
             android:layout_toRightOf="@id/exit_button"
             android:layout_marginLeft="15dip"
             android:layout_centerVertical="true"
-            android:src="@drawable/fon3_foto_map"
+            android:src="@drawable/map_button"
             android:background="@android:color/transparent"/>
     </RelativeLayout>
 </LinearLayout>

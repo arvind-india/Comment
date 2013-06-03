@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:background="@android:color/transparent"
-            android:src="@drawable/fon2_foto_c"/>
+            android:src="@drawable/c_button_selector"/>
         
        <ImageButton
             android:id="@+id/take_photo"
@@ -64,7 +64,7 @@
             android:layout_marginRight="15dip"
             android:layout_centerVertical="true"
             android:background="@android:color/transparent"
-            android:src="@drawable/fon2_foto_krug_f" />
+            android:src="@drawable/take_photo_button" />
 
         <ImageButton
             android:id="@+id/take_video"
@@ -74,7 +74,7 @@
             android:layout_marginLeft="15dip"
             android:layout_centerVertical="true"
             android:background="@android:color/transparent"
-            android:src="@drawable/fon2_foto_krug_cam" />
+            android:src="@drawable/take_video_button" />
     </RelativeLayout>
 
 </LinearLayout>

@@ -106,7 +106,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true" 
-            android:src="@drawable/fon2_foto_c2"
+            android:src="@drawable/c_button_selector"
             android:background="@android:color/transparent"/>
         
         <ImageButton
@@ -116,7 +116,7 @@
             android:layout_toLeftOf="@id/button_send"
             android:layout_marginRight="15dip"
             android:layout_centerVertical="true"
-            android:src="@drawable/fon2_foto_krug_c1"
+            android:src="@drawable/discuss_button"
             android:background="@android:color/transparent"/>
 
         <ImageButton
@@ -126,7 +126,7 @@
             android:layout_toRightOf="@id/button_send"
             android:layout_marginLeft="15dip"
             android:layout_centerVertical="true"
-            android:src="@drawable/fon2_foto_krug_d1"
+            android:src="@drawable/download_button"
             android:background="@android:color/transparent" />
     </RelativeLayout>
 
