@@ -59,7 +59,7 @@ public class MainActivity extends Activity implements OnClickListener,
 		listReceiver = new ActionListReceiver();
 		registerReceiver(listReceiver, new IntentFilter(LocationMonitoringService.ACTION_NOTES_LIST_RECEIVED));
 
-//		startLocationService();
+		startLocationService();
 	}
 	
 	
