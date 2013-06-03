@@ -57,7 +57,7 @@ public class CommentsAdapter extends BaseAdapter {
 
 		final Comment comment = comments.get(position);	
 				
-		holder.title.setText(comment.getComment());
+		holder.title.setText(String.format("Comment: %s", comment.getComment()));
 		if (comment.getIsLike() == 1){
 			holder.icon.setImageResource(R.drawable.fon2_foto_like);	
 		} else{

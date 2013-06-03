@@ -9,6 +9,7 @@ import ru.commenthere.comment.R;
 import ru.commenthere.comment.R.id;
 import ru.commenthere.comment.R.layout;
 import ru.commenthere.comment.adapter.CommentsAdapter;
+import ru.commenthere.comment.adapter.NewCommentsAdapter;
 import ru.commenthere.comment.adapter.NotesAdapter;
 import ru.commenthere.comment.model.Comment;
 import ru.commenthere.comment.model.Note;
@@ -40,7 +41,7 @@ public class MainActivity extends Activity implements OnClickListener,
 	private ListView list;
 
 	private NotesAdapter notesAdapter;
-	private CommentsAdapter commentsAdapter;
+	private NewCommentsAdapter commentsAdapter;
 	private ArrayList<Note> notes;
 	private ArrayList<Comment> newComments;
 	private ActionListReceiver listReceiver;
@@ -52,9 +53,14 @@ public class MainActivity extends Activity implements OnClickListener,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		initViews();
-		listReceiver = new ActionListReceiver();
-		startLocationService();
+		
 		handleStartData(getIntent());
+
+		listReceiver = new ActionListReceiver();
+		registerReceiver(listReceiver, new IntentFilter(LocationMonitoringService.ACTION_NOTES_LIST_RECEIVED));
+
+		startLocationService();
+
 		
 		//temporary
 		getMockListData();
@@ -62,6 +68,16 @@ public class MainActivity extends Activity implements OnClickListener,
 		list.setAdapter(notesAdapter);
 	}
 	
+	
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		handleStartData(getIntent());
+	}
+
+
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -78,6 +94,15 @@ public class MainActivity extends Activity implements OnClickListener,
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(listReceiver);
 		LocalBroadcastManager.getInstance(this).sendBroadcast(serviceStop);
 	}
+
+	
+	@Override
+	protected void onDestroy() {
+		unregisterReceiver(listReceiver);
+		super.onDestroy();
+	}
+
+
 
 	private void initViews() {
 		exitButton = (Button) findViewById(R.id.exit_button);
@@ -104,7 +129,7 @@ public class MainActivity extends Activity implements OnClickListener,
 				listType = AppContext.MY_COMMENTS_LIST_TYPE;
 				newComments = (ArrayList<Comment>) extras.getSerializable(
 						AppContext.EVENTS_LIST_KEY);
-				commentsAdapter = new CommentsAdapter(MainActivity.this, newComments);
+				commentsAdapter = new NewCommentsAdapter(MainActivity.this, newComments);
 				list.setAdapter(commentsAdapter);
 			} else {
 				//TODO what we do at the first start without nay data???
@@ -176,10 +201,14 @@ public class MainActivity extends Activity implements OnClickListener,
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		if (listType == AppContext.NOTES_LIST_TYPE) {
-			Note note = notes.get(position);
-			Intent intent = new Intent(this, NoteDetailsActivity.class);
-			intent.putExtra(AppContext.NOTE_KEY, note);
-			startActivity(intent);
+			if (position < notes.size()){
+				Note note = notes.get(position);
+				if (note  != null){
+					Intent intent = new Intent(this, NoteDetailsActivity.class);
+					intent.putExtra(AppContext.NOTE_KEY, note);
+					startActivity(intent);
+				}
+			}
 		}
 	}
 	
@@ -191,7 +220,9 @@ public class MainActivity extends Activity implements OnClickListener,
 					equals(intent.getAction())) {
 				listType = intent.getIntExtra(AppContext.LIST_TYPE_KEY,
 						AppContext.NOTES_LIST_TYPE);
-				notes = (ArrayList<Note>) intent.getSerializableExtra(AppContext.EVENTS_LIST_KEY);
+				ArrayList<Note> newNotes = (ArrayList<Note>) intent.getSerializableExtra(AppContext.EVENTS_LIST_KEY);
+				notes.clear();
+				notes.addAll(newNotes);
 				notesAdapter.notifyDataSetChanged();
 			}
 		}
