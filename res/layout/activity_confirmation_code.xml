@@ -9,7 +9,7 @@
         android:id="@+id/code"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         android:hint="Введите код"
         android:singleLine="true"
         android:layout_centerInParent="true"

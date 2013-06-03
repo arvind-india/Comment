@@ -43,7 +43,7 @@
         android:layout_marginLeft="5dip"
         android:text="0" />
 
-    <ru.commenthere.comment.view.CustomButton
+    <ImageView
         android:id="@+id/note_add_dislike_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -53,6 +53,7 @@
         android:layout_marginBottom="5dip"
         android:focusable="false"
         android:focusableInTouchMode="false"
+        android:clickable="false"
         android:layout_toLeftOf="@id/note_dislikes_amount"
         android:background="@drawable/fon2_foto_unlike1" />
 
@@ -65,7 +66,7 @@
         android:layout_marginLeft="5dip"
         android:text="0" />
 
-    <ru.commenthere.comment.view.CustomButton
+    <ImageView
         android:id="@+id/note_add_like_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -74,6 +75,7 @@
         android:layout_marginBottom="5dip"
         android:focusable="false"
         android:focusableInTouchMode="false"
+        android:clickable="false"
         android:layout_toLeftOf="@id/note_likes_amount"
         android:background="@drawable/fon2_foto_like" />
 
