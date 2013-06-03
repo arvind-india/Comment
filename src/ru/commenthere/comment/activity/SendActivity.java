@@ -281,7 +281,7 @@ public class SendActivity extends Activity implements OnClickListener,
 					e.printStackTrace();
 				}
 
-				int maxSize = 400;
+				int maxSize = IMAGE_MAX_SIZE;
 				int h = bitmapPhoto.getHeight();
 				int w = bitmapPhoto.getWidth();
 				if( h > maxSize || w > maxSize) {
