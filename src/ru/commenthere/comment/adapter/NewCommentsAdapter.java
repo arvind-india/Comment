@@ -17,7 +17,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class NewCommntsAdapter extends BaseAdapter {
+public class NewCommentsAdapter extends BaseAdapter {
 
 	private Context context;
 	private List<Comment> newComments;
@@ -25,7 +25,7 @@ public class NewCommntsAdapter extends BaseAdapter {
 	private DisplayImageOptions options;
 	private LayoutInflater inflanter;
 	
-	public NewCommntsAdapter(Context context, List<Comment> comments) {
+	public NewCommentsAdapter(Context context, List<Comment> comments) {
 		this.context = context;
 		this.newComments = comments;
 		loader = ImageLoader.getInstance();
