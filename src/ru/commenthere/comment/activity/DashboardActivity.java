@@ -64,6 +64,18 @@ public class DashboardActivity extends Activity  implements OnClickListener{
 		intent.putExtra(AppContext.TYPE_KEY, type);
 		startActivity(intent);
 	}
+	
+	@Override
+	protected void onStop() {
+		Application.getInstance().decForegroundActiviesCount();
+		super.onStop();
+	}
+
+	@Override
+	protected void onStart() {
+		Application.getInstance().incForegroundActiviesCount();
+		super.onStart();
+	}
 
 
 }
