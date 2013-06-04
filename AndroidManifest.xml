@@ -23,38 +23,43 @@
         <activity
             android:name=".activity.LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.ConfirmationCodeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
             android:label="Confirmation code" >
         </activity>
         <activity
             android:name=".activity.DashboardActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Dashboard" 
+            android:screenOrientation="portrait" 
             android:launchMode="singleInstance">
         </activity>
         <activity
             android:name=".activity.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Main"
+            android:screenOrientation="portrait"
             android:launchMode="singleInstance" >
         </activity>
         <activity
             android:name=".activity.SendActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"            
             android:label="Send" >
         </activity>
         <activity
             android:name=".activity.NoteDetailsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"      
             android:label="Note Details" >
         </activity>
 
