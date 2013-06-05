@@ -236,7 +236,7 @@ public class LocationMonitoringService extends Service {
 					notes = (ArrayList<Note>) connectionProtocol.getNotes(
 							lastLocation.getLatitude(),
 							lastLocation.getLongitude(), token);
-					if (notes != null) {
+					if (notes != null && notes.size()>0) {
 						Intent mainActivity = new Intent(appContext, MainActivity.class);
 						mainActivity.putExtra(AppContext.EVENTS_LIST_KEY, notes);
 						mainActivity.putExtra(AppContext.LIST_TYPE_KEY,
