@@ -210,6 +210,7 @@ public class SendActivity extends Activity implements OnClickListener,
 				note.setLongitude(Application.getInstance().getAppContext()
 						.getLastLongitude());
 			}
+			note.setLocalFilePath(getPath(fileUri));
 
 			createNoteTask = new CreateNoteTask(this);
 			createNoteTask.setShowProgress(true);

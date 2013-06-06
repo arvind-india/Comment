@@ -18,6 +18,8 @@ public class Note implements Serializable {
 	private int isCanSendComment;
 	private float longitude;
 	private float latitude;
+	
+	private String localFilePath;
 
 	public String getFileNamePreview() {
 		return fileNamePreview;
@@ -113,6 +115,15 @@ public class Note implements Serializable {
 
 	public void setLatitude(float latitude) {
 		this.latitude = latitude;
+	}
+	
+
+	public String getLocalFilePath() {
+		return localFilePath;
+	}
+
+	public void setLocalFilePath(String localFilePath) {
+		this.localFilePath = localFilePath;
 	}
 
 	@Override

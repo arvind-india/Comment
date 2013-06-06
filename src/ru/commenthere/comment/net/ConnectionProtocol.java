@@ -33,7 +33,12 @@ public class ConnectionProtocol {
 	private final static String GET_COMMENTS_ACTION = "get_comments";
 	private final static String ADD_COMMENT_ACTION = "add_comment";
 	private final static String GET_NEW_COMMENTS_ACTION = "get_new_comments_for_my_notes";
+	
+	//for batch operations
+	private final static String CREATE_NOTES_ACTION = "cteate_notes";
+	private final static String ADD_COMMENTS_ACTION = "add_comments";
 
+	
 	private final static int OK_CODE = 0;
 
 	private final static String ERROR_PARAM_NAME = "error";
@@ -396,4 +401,109 @@ public class ConnectionProtocol {
 	public static boolean isNewCommentsAvailable() {
 		return hasNewComments;
 	}
+	
+	public boolean createNotes(List<Note> notes)
+			throws ConnectionClientException {
+		Uri.Builder ub = Uri.parse(AppContext.API_URL).buildUpon();
+		ub.appendQueryParameter(ACTION_PARAM_NAME, CREATE_NOTE_ACTION);
+
+		ArrayList<NameValuePair> arguments = new ArrayList<NameValuePair>();
+//		arguments.add(new BasicNameValuePair(TOKEN_PARAM_NAME, Application
+//				.getInstance().getAppContext().getUserToken()));
+//		arguments.add(new BasicNameValuePair(DESCRIPTION_PARAM_NAME, note
+//				.getDescription()));
+//		arguments.add(new BasicNameValuePair(TYPE_PARAM_NAME, String
+//				.valueOf(note.getType())));
+//		arguments.add(new BasicNameValuePair(FILE_TYPE_PARAM_NAME, String
+//				.valueOf(note.getFileType())));
+//
+//		if (note.getType() == 2) {
+//			arguments.add(new BasicNameValuePair(LONGITUDE_PARAM_NAME, String
+//					.valueOf(note.getLongitude())));
+//			arguments.add(new BasicNameValuePair(LATITUDE_PARAM_NAME, String
+//					.valueOf(note.getLatitude())));
+//		}
+//
+//		if (note.getFileType() == 1 /* photo */) {
+//			arguments.add(new BasicNameValuePair(PHOTO_PARAM_NAME, content));
+//		} else if (note.getFileType() == 2 /* video */) {
+//			arguments.add(new BasicNameValuePair(VIDEO_PARAM_NAME, content));
+//		}
+
+		HttpEntity entity;
+		try {
+			entity = new UrlEncodedFormEntity(arguments);
+			String response = client.sendPostRequest(ub.toString(), entity);
+
+			JSONObject result = null;
+
+			try {
+				result = new JSONObject(response);
+				int errorCode = result.optInt(ERROR_PARAM_NAME);
+				if (errorCode == OK_CODE) {
+					JSONObject actionResult = result
+							.getJSONObject(CREATE_NOTE_ACTION);
+					if (actionResult.optBoolean(RESULT_PARAM_NAME)) {
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					throw new ConnectionClientException(
+							ErrorMessages.errors[errorCode]);
+				}
+
+			} catch (JSONException e) {
+				throw new ConnectionClientException("JSONException", e);
+			}
+
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			throw new ConnectionClientException("UnsupportedEncodingException",
+					e);
+
+		} catch (ConnectionClientException e) {
+			e.printStackTrace();
+			throw new ConnectionClientException("ConnectionClientException", e);
+		}
+	}
+	
+	public boolean addComments(List<Comment> comments) throws ConnectionClientException {
+		Uri.Builder ub = Uri.parse(AppContext.API_URL).buildUpon();
+		ub.appendQueryParameter(ACTION_PARAM_NAME, ADD_COMMENT_ACTION);
+//		ub.appendQueryParameter(COMMENT_PARAM_NAME, comment.getComment());
+//		ub.appendQueryParameter(NOTE_ID_PARAM_NAME,
+//				String.valueOf(comment.getNoteId()));
+//		ub.appendQueryParameter(IS_LIKE_PARAM_NAME,
+//				String.valueOf(comment.getIsLike()));
+//		ub.appendQueryParameter(TOKEN_PARAM_NAME, Application.getInstance()
+//				.getAppContext().getUserToken());
+
+		String response = client.sendGetRequest(ub.toString());
+
+		JSONObject result = null;
+
+		try {
+			result = new JSONObject(response);
+			int errorCode = result.optInt(ERROR_PARAM_NAME);
+			if (errorCode == OK_CODE) {
+				JSONObject actionResult = result
+						.getJSONObject(ADD_COMMENT_ACTION);
+				if (actionResult.optBoolean(RESULT_PARAM_NAME)) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				throw new ConnectionClientException(
+						ErrorMessages.errors[errorCode]);
+			}
+
+		} catch (JSONException e) {
+			throw new ConnectionClientException("JSONException", e);
+		}
+	}
+
+	
+	
 }
