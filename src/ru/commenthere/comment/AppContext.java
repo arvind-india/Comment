@@ -39,7 +39,9 @@ public class AppContext {
 	public static final String NOTE_KEY = "note";	
 	public static final String POSITION_KEY = "position";
 	public static final String IS_LIKE_KEY = "is_like";
-	
+
+	public static final String URL_KEY = "url";
+
 	public static final int PHOTO_FILE_TYPE = 1;
 	public static final int VIDOE_FILE_TYPE = 2;
 

@@ -258,10 +258,10 @@ public class SendActivity extends Activity implements OnClickListener,
 	@Override
 	public void onTaskFinished(CustomAsyncTask<?, ?, ?> task) {
 		if ((Boolean) task.getResult()) {
-			AppUtils.showAlert(this, "Размещено успешно");
+			AppUtils.showToast(this, "Размещено успешно");
 			finish();
 		} else {
-			AppUtils.showAlert(this, "Попробуйте еще раз");
+			AppUtils.showToast(this, "Попробуйте еще раз");
 		}
 		createNoteTask = null;
 
