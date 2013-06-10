@@ -4,10 +4,17 @@ import java.util.List;
 
 import ru.commenthere.comment.AppContext;
 import ru.commenthere.comment.R;
+import ru.commenthere.comment.activity.NoteDetailsActivity;
+import ru.commenthere.comment.activity.PhotoActivity;
+import ru.commenthere.comment.activity.VideoActivity;
+import ru.commenthere.comment.model.Comment;
 import ru.commenthere.comment.model.Note;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -62,14 +69,33 @@ public class NotesAdapter extends BaseAdapter {
 			convertView.setTag(viewHandler);
 		}
 		viewHandler = (ViewHandler) convertView.getTag();
-		Note note = notesList.get(position);
+		final Note note = notesList.get(position);
 		String imageUrl =  note.getFileName().startsWith("http") ? note.getFileNamePreview() 
 				: AppContext.PHOTOS_URL + note.getFileNamePreview();
 
 		imageLoader.displayImage(imageUrl, viewHandler.image,
 				imageOptions);
-		// imageLoader.displayImage(note.getFileNamePreview(),
-		// viewHandler.statusImage, imageOptions);
+		
+		viewHandler.image.setOnClickListener( new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (note  != null){
+					if (note.getFileType()==AppContext.PHOTO_FILE_TYPE){
+						String photoUrl =  note.getFileName().startsWith("http://") ? note.getFileName() : AppContext.PHOTOS_URL + note.getFileName();
+						Intent intent = new Intent(cnt, PhotoActivity.class);
+						intent.putExtra(AppContext.URL_KEY, photoUrl);
+						cnt.startActivity(intent);
+					}else{
+						String videoUrl =  note.getFileName().startsWith("http://") ? note.getFileName() : AppContext.VIDEOS_URL + note.getFileName();
+						Intent intent = new Intent(cnt, VideoActivity.class);
+						intent.putExtra(AppContext.URL_KEY, videoUrl);
+						cnt.startActivity(intent);
+					}
+				}
+			}
+		});
+		
 		viewHandler.firstName.setText(note.getDescription());
 		viewHandler.likesAmount.setText(String.valueOf(note.getLikes()));
 		viewHandler.dislikesAmount.setText(String.valueOf(note.getDislikes()));

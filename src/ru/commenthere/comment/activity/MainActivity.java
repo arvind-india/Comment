@@ -55,8 +55,6 @@ public class MainActivity extends Activity implements OnClickListener,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		initViews();
-		
-		handleStartData(getIntent());
 
 		//listReceiver = new ActionListReceiver();
 		//registerReceiver(listReceiver, new IntentFilter(LocationMonitoringService.ACTION_NOTES_LIST_RECEIVED));
@@ -212,18 +210,7 @@ public class MainActivity extends Activity implements OnClickListener,
 					startActivityForResult(intent, NOTE_DETAILS_ACTIVITY_REQUEST_CODE);
 				}
 			}
-		} else{
-			if (position < newComments.size()){
-				Comment comment = newComments.get(position);
-				if (comment  != null){
-					String url = comment.getFilePreviewUrl().startsWith("http") ? comment.getFilePreviewUrl()
-							: AppContext.PHOTOS_URL + comment.getFilePreviewUrl();
-					Intent intent = new Intent(this, PhotoActivity.class);
-					intent.putExtra(AppContext.URL_KEY, url);
-					startActivity(intent);
-				}
-			}		
-		}
+		} 
 	}
 	
 	@Override
