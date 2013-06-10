@@ -273,9 +273,10 @@ public class NoteDetailsActivity extends ListActivity implements OnClickListener
 				data.putExtra(AppContext.POSITION_KEY, position);
 				data.putExtra(AppContext.IS_LIKE_KEY, likeButton.isChecked());
 				setResult(RESULT_OK, data);
+				AppUtils.showAlert(this, "Комментарий добавлен");
 				finish();
 			} else {
-				AppUtils.showAlert(this, task.getErrorMessage());
+				AppUtils.showAlert(this, "Попробуйте еще раз");
 			}
 			addCommentTask = null;
 		}
