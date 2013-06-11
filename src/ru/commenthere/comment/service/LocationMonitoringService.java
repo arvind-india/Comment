@@ -22,9 +22,12 @@ import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 public class LocationMonitoringService extends Service {
@@ -94,6 +97,12 @@ public class LocationMonitoringService extends Service {
 				locationRefreshInterval, accuracy, locationListener);
 
 		startLocationSending();
+		
+
+		TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);                
+		telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_DATA_CONNECTION_STATE); 
+	
+		registerReceiver(networkStateReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 	}
 
 	@Override
@@ -112,6 +121,7 @@ public class LocationMonitoringService extends Service {
 		if (isDebug) {
 			Log.d(TAG, "Service: destroing service.");
 		}
+		unregisterReceiver(networkStateReceiver);
 
 		stopLocationSending();
 		LocalBroadcastManager.getInstance(appContext).unregisterReceiver(
@@ -193,6 +203,28 @@ public class LocationMonitoringService extends Service {
 		}
 
 	}
+	
+	PhoneStateListener phoneStateListener = new PhoneStateListener(){
+	    public void onDataConnectionStateChanged(int state){
+	    	 switch(state){
+	         	case TelephonyManager.DATA_CONNECTED:
+	        	 Log.i("State: ", "Online");
+	             break;
+	         	case TelephonyManager.DATA_DISCONNECTED:
+        		Log.i("State: ", "Offline");
+        		break;
+        	}
+	            
+	    }       
+	};  
+	
+	BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
+
+	    @Override
+	    public void onReceive(Context context, Intent intent) {
+	        Log.w("Network Listener", "Network Type Changed");
+	    }
+	};
 
 	private class CommandsBroadcastReceiver extends BroadcastReceiver {
 
