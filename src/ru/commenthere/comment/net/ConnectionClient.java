@@ -94,7 +94,7 @@ public class ConnectionClient {
 		return convertStreamToString(is);
 	}
 
-	public String sendPostRequest(String url, String postData)
+	public String sendPostRequest(String url, String postData, HttpParams params)
 			throws ConnectionClientException {
 		HttpResponse response = null;
 
@@ -122,6 +122,9 @@ public class ConnectionClient {
 			s.setContentType("application/x-www-form-urlencoded; charset=utf-8");
 			post_entity = s;
 			request.setEntity(post_entity);
+			if (params != null){
+				request.setParams(params);
+			}
 		} catch (UnsupportedEncodingException e) {
 			throw new ConnectionClientException("UnsupportedEncodingException",
 					e);

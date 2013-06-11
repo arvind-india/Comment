@@ -7,7 +7,10 @@ import java.util.List;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -402,38 +405,38 @@ public class ConnectionProtocol {
 		return hasNewComments;
 	}
 	
-	public boolean createNotes(List<Note> notes)
-			throws ConnectionClientException {
+	public boolean createNotes(List<Note> notes) throws ConnectionClientException {
 		Uri.Builder ub = Uri.parse(AppContext.API_URL).buildUpon();
 		ub.appendQueryParameter(ACTION_PARAM_NAME, CREATE_NOTE_ACTION);
+		
+		HttpParams params = new BasicHttpParams();
+		params.setParameter(TOKEN_PARAM_NAME, Application.getInstance().getAppContext().getUserToken());
+		
+		JSONArray jsonArray = new JSONArray();
+		for (Note note : notes){
+			JSONObject jsonObject = new JSONObject();
+			try {
+				jsonObject.put(DESCRIPTION_PARAM_NAME, note.getDescription());
+				jsonObject.put(TYPE_PARAM_NAME, String.valueOf(note.getType()));
+				if (note.getType() == 2) {
+					jsonObject.put(LONGITUDE_PARAM_NAME, String.valueOf(note.getLongitude()));
+					jsonObject.put(LATITUDE_PARAM_NAME, String.valueOf(note.getLatitude()));
+				}
+				String content = AppUtils.encodeFileToBase64(Application.getInstance().getContext(), note.getLocalFilePath());
 
-		ArrayList<NameValuePair> arguments = new ArrayList<NameValuePair>();
-//		arguments.add(new BasicNameValuePair(TOKEN_PARAM_NAME, Application
-//				.getInstance().getAppContext().getUserToken()));
-//		arguments.add(new BasicNameValuePair(DESCRIPTION_PARAM_NAME, note
-//				.getDescription()));
-//		arguments.add(new BasicNameValuePair(TYPE_PARAM_NAME, String
-//				.valueOf(note.getType())));
-//		arguments.add(new BasicNameValuePair(FILE_TYPE_PARAM_NAME, String
-//				.valueOf(note.getFileType())));
-//
-//		if (note.getType() == 2) {
-//			arguments.add(new BasicNameValuePair(LONGITUDE_PARAM_NAME, String
-//					.valueOf(note.getLongitude())));
-//			arguments.add(new BasicNameValuePair(LATITUDE_PARAM_NAME, String
-//					.valueOf(note.getLatitude())));
-//		}
-//
-//		if (note.getFileType() == 1 /* photo */) {
-//			arguments.add(new BasicNameValuePair(PHOTO_PARAM_NAME, content));
-//		} else if (note.getFileType() == 2 /* video */) {
-//			arguments.add(new BasicNameValuePair(VIDEO_PARAM_NAME, content));
-//		}
+				if (note.getFileType() == 1 /* photo */) {
+					jsonObject.put(PHOTO_PARAM_NAME, content);
+				} else if (note.getFileType() == 2 /* video */) {
+					jsonObject.put(VIDEO_PARAM_NAME, content);
+				}
+				jsonArray.put(jsonObject);				
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
 
-		HttpEntity entity;
 		try {
-			entity = new UrlEncodedFormEntity(arguments);
-			String response = client.sendPostRequest(ub.toString(), entity);
+			String response = client.sendPostRequest(ub.toString(), jsonArray.toString(), params);
 
 			JSONObject result = null;
 
@@ -457,11 +460,6 @@ public class ConnectionProtocol {
 				throw new ConnectionClientException("JSONException", e);
 			}
 
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			throw new ConnectionClientException("UnsupportedEncodingException",
-					e);
-
 		} catch (ConnectionClientException e) {
 			e.printStackTrace();
 			throw new ConnectionClientException("ConnectionClientException", e);
@@ -471,15 +469,25 @@ public class ConnectionProtocol {
 	public boolean addComments(List<Comment> comments) throws ConnectionClientException {
 		Uri.Builder ub = Uri.parse(AppContext.API_URL).buildUpon();
 		ub.appendQueryParameter(ACTION_PARAM_NAME, ADD_COMMENT_ACTION);
-//		ub.appendQueryParameter(COMMENT_PARAM_NAME, comment.getComment());
-//		ub.appendQueryParameter(NOTE_ID_PARAM_NAME,
-//				String.valueOf(comment.getNoteId()));
-//		ub.appendQueryParameter(IS_LIKE_PARAM_NAME,
-//				String.valueOf(comment.getIsLike()));
-//		ub.appendQueryParameter(TOKEN_PARAM_NAME, Application.getInstance()
-//				.getAppContext().getUserToken());
+		
+		HttpParams params = new BasicHttpParams();
+		params.setParameter(TOKEN_PARAM_NAME, Application.getInstance().getAppContext().getUserToken());
 
-		String response = client.sendGetRequest(ub.toString());
+		JSONArray jsonArray = new JSONArray();
+		for (Comment comment : comments){
+			JSONObject jsonObject = new JSONObject();
+			try {
+				jsonObject.put(COMMENT_PARAM_NAME, comment.getComment());
+				jsonObject.put(NOTE_ID_PARAM_NAME, String.valueOf(comment.getNoteId()));
+				jsonObject.put(IS_LIKE_PARAM_NAME, String.valueOf(comment.getIsLike()));
+
+				jsonArray.put(jsonObject);				
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+
+		String response = client.sendPostRequest(ub.toString(), jsonArray.toString(),params);
 
 		JSONObject result = null;
 
