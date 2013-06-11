@@ -3,6 +3,9 @@ package ru.commenthere.comment;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+
+import ru.commenthere.comment.db.ORMDatabaseHelper;
 import ru.commenthere.comment.model.Note;
 
 import android.content.Context;
@@ -53,6 +56,7 @@ public class AppContext {
 
 	private Context context;
 	private SharedPreferences mPrefs;
+	private ORMDatabaseHelper ormDatabaseHelper;
 
 	private List<Note> lastReceivedNotesList;
 
@@ -117,4 +121,18 @@ public class AppContext {
 	public List<Note> getLastReceivedNotesList() {
 		return lastReceivedNotesList;
 	}
+	
+	public ORMDatabaseHelper getOrmDatabaseHelper() {
+		return ormDatabaseHelper;
+	}
+	
+	
+	public void setOrmDatabaseHelper(ORMDatabaseHelper ormDatabaseHelper) {
+		this.ormDatabaseHelper = ormDatabaseHelper;
+	}
+
+	public void releaseOrmDatabaseHelper(){
+	       OpenHelperManager.releaseHelper();
+	       this.ormDatabaseHelper = null;
+	   }
 }

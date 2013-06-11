@@ -2,23 +2,52 @@ package ru.commenthere.comment.model;
 
 import java.io.Serializable;
 
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "note")
 public class Note implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
-	private String fileName;
-	private String description;
-	private String fileNamePreview;
-	private int id;
-	private int userId;
-	private int type;
-	private int fileType;
-	private int likes;
-	private int dislikes;
-	private int isCanSendComment;
-	private float longitude;
-	private float latitude;
 	
+	@DatabaseField(id = true , columnName = "id")
+	private int id;
+	
+	@DatabaseField(columnName = "file_name", dataType = DataType.STRING)
+	private String fileName;
+	
+	@DatabaseField(dataType = DataType.STRING)
+	private String description;
+	
+	@DatabaseField(columnName = "file_name_preview", dataType = DataType.STRING)	
+	private String fileNamePreview;
+	
+	@DatabaseField(columnName = "user_id")	
+	private int userId;
+
+	@DatabaseField(columnName = "type")	
+	private int type;
+	
+	@DatabaseField(columnName = "file_type")		
+	private int fileType;
+	
+	@DatabaseField(columnName = "likes")	
+	private int likes;
+	
+	@DatabaseField(columnName = "dislikes")	
+	private int dislikes;
+	
+	@DatabaseField(columnName = "is_can_send_comment")	
+	private int isCanSendComment;
+	
+	@DatabaseField(columnName = "longitude")	
+	private float longitude;
+	
+	@DatabaseField(columnName = "latitude")	
+	private float latitude;
+
+	@DatabaseField(columnName = "local_file_path", dataType = DataType.STRING)		
 	private String localFilePath;
 
 	public String getFileNamePreview() {

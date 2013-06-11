@@ -1,5 +1,6 @@
 package ru.commenthere.comment.activity;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -12,6 +13,9 @@ import ru.commenthere.comment.R.id;
 import ru.commenthere.comment.R.layout;
 import ru.commenthere.comment.adapter.CommentsAdapter;
 import ru.commenthere.comment.adapter.NotesAdapter;
+import ru.commenthere.comment.dao.CommentDAO;
+import ru.commenthere.comment.dao.NoteDAO;
+import ru.commenthere.comment.db.ORMDatabaseHelper;
 import ru.commenthere.comment.model.Comment;
 import ru.commenthere.comment.model.Note;
 import ru.commenthere.comment.task.AddCommentTask;
@@ -175,20 +179,34 @@ public class NoteDetailsActivity extends ListActivity implements OnClickListener
 	
 	private void sendComment(){
 		if (validate()) {
+			final Comment comment = new Comment();
+			comment.setNoteId(note.getId());
+			comment.setComment(commentEditText.getText().toString().trim());
+			if(likeButton.isChecked()){
+				comment.setIsLike(1);	
+			}else if (dislikeButton.isChecked()){
+				comment.setIsLike(0);				
+			}
+
 			if (AppUtils.isOnline(this)) {
-				Comment comment = new Comment();
-				comment.setNoteId(note.getId());
-				comment.setComment(commentEditText.getText().toString().trim());
-				if(likeButton.isChecked()){
-					comment.setIsLike(1);	
-				}else if (dislikeButton.isChecked()){
-					comment.setIsLike(0);				
-				}
-				
 				processAddComment(comment);
 			} else {
-				AppUtils.showToast(this,
-						"Отсутствует подключение к Интернету");
+				ORMDatabaseHelper dbh = Application.getInstance().getAppContext().getOrmDatabaseHelper();
+				try {
+					if (dbh == null || dbh.getCommentDAO() == null){
+						return;
+					}
+					CommentDAO commentDAO = dbh.getCommentDAO();
+					if (commentDAO.idExists(comment.getId())){
+						commentDAO.update(comment);
+					} else{
+						commentDAO.create(comment);
+					}	
+					AppUtils.showToast(this,"Отсутствует подключение к Интернету. Данные сохранены локльно.");
+		
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

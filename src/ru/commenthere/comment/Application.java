@@ -1,5 +1,6 @@
 package ru.commenthere.comment;
 
+import ru.commenthere.comment.db.ORMDatabaseHelper;
 import android.content.ComponentName;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -11,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
@@ -50,7 +52,7 @@ public class Application extends android.app.Application {
 		appContext = new AppContext(context);
 
 		initImageLoader();
-
+		initDbh();
 	}
 
 	private void initImageLoader() {
@@ -65,6 +67,11 @@ public class Application extends android.app.Application {
 				.tasksProcessingOrder(QueueProcessingType.LIFO).build();
 		ImageLoader.getInstance().init(config);
 	}
+	
+    private void initDbh(){
+    	ORMDatabaseHelper ormDatabaseHelper = OpenHelperManager.getHelper(this, ORMDatabaseHelper.class);
+    	appContext.setOrmDatabaseHelper(ormDatabaseHelper);
+    }
 
 	public Context getContext() {
 		if (context == null) {

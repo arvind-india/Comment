@@ -7,11 +7,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.SQLException;
 
 import ru.commenthere.comment.AppContext;
 import ru.commenthere.comment.Application;
 import ru.commenthere.comment.R;
 import ru.commenthere.comment.R.layout;
+import ru.commenthere.comment.dao.NoteDAO;
+import ru.commenthere.comment.db.ORMDatabaseHelper;
 import ru.commenthere.comment.model.Note;
 import ru.commenthere.comment.task.CreateNoteTask;
 import ru.commenthere.comment.task.CustomAsyncTask;
@@ -171,11 +174,38 @@ public class SendActivity extends Activity implements OnClickListener,
 			captureVideo();
 		} else if (v.getId() == R.id.send) {
 			if (validate()) {
+
+				final Note note = new Note();
+				note.setDescription(comment);
+				note.setFileType(fileType);
+				note.setType(type);
+				if (type == AppContext.EVENT_TYPE) {
+					note.setLatitude(Application.getInstance().getAppContext()
+							.getLastLatitude());
+					note.setLongitude(Application.getInstance().getAppContext()
+							.getLastLongitude());
+				}				
+				note.setLocalFilePath(getPath(fileUri));
+			
 				if (AppUtils.isOnline(this)) {
-					processCreateNote(comment);
+					processCreateNote(note);
 				} else {
-					AppUtils.showToast(this,
-							"Отсутствует подключение к Интернету");
+					ORMDatabaseHelper dbh = Application.getInstance().getAppContext().getOrmDatabaseHelper();
+					try {
+						if (dbh == null || dbh.getNoteDAO() == null){
+							return;
+						}
+						NoteDAO noteDAO = dbh.getNoteDAO();
+						if (noteDAO.idExists(note.getId())){
+							noteDAO.update(note);
+						} else{
+							noteDAO.create(note);
+						}	
+						AppUtils.showToast(this,"Отсутствует подключение к Интернету. Данные сохранены локльно.");
+			
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -197,25 +227,14 @@ public class SendActivity extends Activity implements OnClickListener,
 
 	}
 
-	private void processCreateNote(String comment) {
+	private void processCreateNote(Note note) {
 		if (createNoteTask == null) {
 
-			Note note = new Note();
-			note.setDescription(comment);
-			note.setFileType(fileType);
-			note.setType(type);
-			if (type == AppContext.EVENT_TYPE) {
-				note.setLatitude(Application.getInstance().getAppContext()
-						.getLastLatitude());
-				note.setLongitude(Application.getInstance().getAppContext()
-						.getLastLongitude());
-			}
-			note.setLocalFilePath(getPath(fileUri));
 
 			createNoteTask = new CreateNoteTask(this);
 			createNoteTask.setShowProgress(true);
 			createNoteTask.setAsyncTaskListener(this);
-			createNoteTask.execute(note, getPath(fileUri));
+			createNoteTask.execute(note, note.getLocalFilePath());
 		}
 	}
 

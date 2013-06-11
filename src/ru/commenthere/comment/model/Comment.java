@@ -2,15 +2,31 @@ package ru.commenthere.comment.model;
 
 import java.io.Serializable;
 
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "comment")
 public class Comment implements Serializable {
 
 	private static final long serialVersionUID = 5L;
 	
+	@DatabaseField(id = true , columnName = "id")
 	private int id;
+	
+	@DatabaseField(columnName = "note_id")	
 	private int noteId;
+	
+	@DatabaseField(columnName = "user_id")	
 	private int userId;
+	
+	@DatabaseField(columnName = "comment", dataType = DataType.STRING)
 	private String comment;
+	
+	@DatabaseField(columnName = "is_like")	
 	private int isLike;
+	
+	@DatabaseField(columnName = "file_preview_url", dataType = DataType.STRING)
 	private String filePreviewUrl;
 
 	public String getFilePreviewUrl() {
