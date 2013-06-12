@@ -25,6 +25,9 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnPreparedListener;
+import android.media.MediaPlayer.OnVideoSizeChangedListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -59,6 +62,7 @@ public class SendActivity extends Activity implements OnClickListener,
 
 	private ImageView imageView;
 	private VideoView videoView;
+	private MediaController mc;
 
 	private EditText coomentEditText;
 
@@ -86,7 +90,10 @@ public class SendActivity extends Activity implements OnClickListener,
 
 		imageView = (ImageView) findViewById(R.id.image_view);
 		videoView = (VideoView) findViewById(R.id.video_view);
-		videoView.setMediaController(new MediaController(this));
+		mc = new MediaController(this);
+		mc.setAnchorView(videoView);
+		mc.setPadding(0, 0, 0, (int)AppUtils.convertDpToPixel(185, this));
+		videoView.setMediaController(mc);
 
 		takePhotoButton = (ImageButton) findViewById(R.id.take_photo);
 		takeVideoButton = (ImageButton) findViewById(R.id.take_video);
@@ -158,6 +165,7 @@ public class SendActivity extends Activity implements OnClickListener,
 				imageView.setVisibility(View.GONE);
 				videoView.setVisibility(View.VISIBLE);
 				videoView.setVideoURI(fileUri);
+				
 			} else if (resultCode == RESULT_CANCELED) {
 				// User cancelled the video capture
 			} else {
