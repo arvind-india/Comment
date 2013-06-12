@@ -202,7 +202,7 @@ public class SendActivity extends Activity implements OnClickListener,
 							noteDAO.create(note);
 						}	
 						AppUtils.showToast(this,"Отсутствует подключение к Интернету. Данные сохранены локльно.");
-			
+						finish();
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}

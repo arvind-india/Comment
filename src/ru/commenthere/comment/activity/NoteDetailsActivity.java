@@ -203,7 +203,7 @@ public class NoteDetailsActivity extends ListActivity implements OnClickListener
 						commentDAO.create(comment);
 					}	
 					AppUtils.showToast(this,"Отсутствует подключение к Интернету. Данные сохранены локльно.");
-		
+					finish();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}

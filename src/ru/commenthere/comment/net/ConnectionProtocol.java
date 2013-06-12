@@ -38,7 +38,7 @@ public class ConnectionProtocol {
 	private final static String GET_NEW_COMMENTS_ACTION = "get_new_comments_for_my_notes";
 	
 	//for batch operations
-	private final static String CREATE_NOTES_ACTION = "cteate_notes";
+	private final static String CREATE_NOTES_ACTION = "create_notes";
 	private final static String ADD_COMMENTS_ACTION = "add_comments";
 
 	
@@ -407,7 +407,7 @@ public class ConnectionProtocol {
 	
 	public boolean createNotes(List<Note> notes) throws ConnectionClientException {
 		Uri.Builder ub = Uri.parse(AppContext.API_URL).buildUpon();
-		ub.appendQueryParameter(ACTION_PARAM_NAME, CREATE_NOTE_ACTION);
+		ub.appendQueryParameter(ACTION_PARAM_NAME, CREATE_NOTES_ACTION);
 		
 		HttpParams params = new BasicHttpParams();
 		params.setParameter(TOKEN_PARAM_NAME, Application.getInstance().getAppContext().getUserToken());
@@ -416,6 +416,7 @@ public class ConnectionProtocol {
 		for (Note note : notes){
 			JSONObject jsonObject = new JSONObject();
 			try {
+				jsonObject.put(TOKEN_PARAM_NAME, Application.getInstance().getAppContext().getUserToken());
 				jsonObject.put(DESCRIPTION_PARAM_NAME, note.getDescription());
 				jsonObject.put(TYPE_PARAM_NAME, String.valueOf(note.getType()));
 				if (note.getType() == 2) {
@@ -468,7 +469,7 @@ public class ConnectionProtocol {
 	
 	public boolean addComments(List<Comment> comments) throws ConnectionClientException {
 		Uri.Builder ub = Uri.parse(AppContext.API_URL).buildUpon();
-		ub.appendQueryParameter(ACTION_PARAM_NAME, ADD_COMMENT_ACTION);
+		ub.appendQueryParameter(ACTION_PARAM_NAME, ADD_COMMENTS_ACTION);
 		
 		HttpParams params = new BasicHttpParams();
 		params.setParameter(TOKEN_PARAM_NAME, Application.getInstance().getAppContext().getUserToken());
@@ -477,6 +478,7 @@ public class ConnectionProtocol {
 		for (Comment comment : comments){
 			JSONObject jsonObject = new JSONObject();
 			try {
+				jsonObject.put(TOKEN_PARAM_NAME, Application.getInstance().getAppContext().getUserToken());
 				jsonObject.put(COMMENT_PARAM_NAME, comment.getComment());
 				jsonObject.put(NOTE_ID_PARAM_NAME, String.valueOf(comment.getNoteId()));
 				jsonObject.put(IS_LIKE_PARAM_NAME, String.valueOf(comment.getIsLike()));

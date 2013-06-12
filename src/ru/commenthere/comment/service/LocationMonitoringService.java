@@ -1,5 +1,6 @@
 package ru.commenthere.comment.service;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -8,6 +9,9 @@ import java.util.TimerTask;
 import ru.commenthere.comment.AppContext;
 import ru.commenthere.comment.Application;
 import ru.commenthere.comment.activity.MainActivity;
+import ru.commenthere.comment.dao.CommentDAO;
+import ru.commenthere.comment.dao.NoteDAO;
+import ru.commenthere.comment.db.ORMDatabaseHelper;
 import ru.commenthere.comment.model.Comment;
 import ru.commenthere.comment.model.Note;
 import ru.commenthere.comment.net.ConnectionClientException;
@@ -222,9 +226,70 @@ public class LocationMonitoringService extends Service {
 
 	    @Override
 	    public void onReceive(Context context, Intent intent) {
-	        Log.w("Network Listener", "Network Type Changed");
+	        Log.i("Network Listener", "Network Type Changed");
+	        if (AppUtils.isOnline(appContext)){
+	        	sendData();
+	        }
 	    }
 	};
+	
+	
+	private void sendData(){
+	    Log.i("TAG", "sendData called");
+		new Thread(new Runnable() {			
+			@Override
+			public void run() {
+				ORMDatabaseHelper dbh = Application.getInstance().getAppContext().getOrmDatabaseHelper();
+				try {
+					if (dbh == null || dbh.getNoteDAO() == null){
+						return;
+					}
+					
+					NoteDAO noteDAO = dbh.getNoteDAO();
+					List<Note> notes = noteDAO.queryForAll();
+					if (notes != null && notes.size()>0){
+						try {
+						    Log.i("TAG", "Sending notes");
+							if(connectionProtocol.createNotes(notes)){
+							    Log.i("TAG", "Sending notes - OK");
+								noteDAO.delete(notes);
+							} else{
+							    Log.i("TAG", "Sending notes - Faild");
+							}
+						} catch (ConnectionClientException e) {
+						    Log.i("TAG", "Sending notes - Faild");
+							e.printStackTrace();
+						}
+					}
+					
+					if (dbh == null || dbh.getCommentDAO() == null){
+						return;
+					}
+					
+					CommentDAO commentDAO = dbh.getCommentDAO();
+					List<Comment> comments = commentDAO.queryForAll();
+					if (comments != null && comments.size()>0){
+						try {
+						    Log.i("TAG", "Sending comments");
+							if(connectionProtocol.addComments(comments)){
+							    Log.i("TAG", "Sending comments - OK");
+								commentDAO.delete(comments);
+							} else{
+							    Log.i("TAG", "Sending comments - Faild");
+							}
+						} catch (ConnectionClientException e) {
+						    Log.i("TAG", "Sending comments - Faild");
+							e.printStackTrace();
+						}
+					}
+					
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		}).start();
+	}
 
 	private class CommandsBroadcastReceiver extends BroadcastReceiver {
 

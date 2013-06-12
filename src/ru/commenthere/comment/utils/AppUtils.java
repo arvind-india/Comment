@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -302,7 +303,7 @@ public class AppUtils {
 					conn.setInstanceFollowRedirects(true);
 					InputStream is = conn.getInputStream();
 					OutputStream os = new FileOutputStream(f);
-					CopyStream(is, os);
+					copyStream(is, os);
 					os.close();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -321,7 +322,7 @@ public class AppUtils {
 		return true;
 	}
 
-	public static void CopyStream(InputStream is, OutputStream os) {
+	public static void copyStream(InputStream is, OutputStream os) {
 		final int buffer_size = 1024;
 		try {
 			byte[] bytes = new byte[buffer_size];
@@ -411,6 +412,11 @@ public class AppUtils {
 
 		return "";
 
+	}
+	
+	public static String convertStreamToString(InputStream is) {
+		   java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+		    return s.hasNext() ? s.next() : "";
 	}
 
 }

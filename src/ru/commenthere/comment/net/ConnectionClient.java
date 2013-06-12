@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.zip.GZIPInputStream;
 
@@ -32,6 +33,7 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
 import ru.commenthere.comment.AppContext;
+import ru.commenthere.comment.utils.AppUtils;
 
 import android.preference.PreferenceActivity.Header;
 import android.util.Log;
@@ -68,7 +70,7 @@ public class ConnectionClient {
 		if (AppContext.USE_GZIP) {
 			request.addHeader("Accept-Encoding", "gzip");
 		}
-		;
+		
 
 		try {
 			response = client.execute(request);
@@ -103,15 +105,12 @@ public class ConnectionClient {
 		if (AppContext.USE_GZIP) {
 			request.addHeader("Accept-Encoding", "gzip");
 		}
-		;
 
-		// String req = "data=" + encodeToBase64(postData);
 		String req = null;
 		try {
 			req = URLEncoder.encode(postData, "utf-8");
 		} catch (UnsupportedEncodingException e) {
-			throw new ConnectionClientException("UnsupportedEncodingException",
-					e);
+			throw new ConnectionClientException("UnsupportedEncodingException",e);
 		}
 		postData = null;
 
@@ -126,11 +125,13 @@ public class ConnectionClient {
 				request.setParams(params);
 			}
 		} catch (UnsupportedEncodingException e) {
-			throw new ConnectionClientException("UnsupportedEncodingException",
-					e);
+			throw new ConnectionClientException("UnsupportedEncodingException", e);
 		}
 
 		try {
+			//Log.d(TAG, "params: token  =  "+ request.getParams().getParameter("token"));
+			//Log.d(TAG, "entity =  "+ URLDecoder.decode(AppUtils.convertStreamToString(request.getEntity().getContent())));
+
 			response = client.execute(request);
 			if (response != null) {
 				StatusLine status = response.getStatusLine();
